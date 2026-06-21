@@ -1,44 +1,10 @@
 # Changelog
 
-## v4.3 GitHub Upload Package
-
-- Created GitHub-ready folder structure.
-- Organized assets into rooms, characters, icons, machines, and raw folders.
-- Added README, AI handoff, changelog, decisions, bugs, and prompt docs.
-- Replaced main room backgrounds with the newest generated four-room images where available.
-- Patched `index.html` asset paths to match organized folders.
-
-## v4.2 Hotfix
-
-- Fixed broken image paths.
-- Connected four room backgrounds.
-- Reduced image flickering.
-- Added basic fake character movement.
-- Added mobile CSS draft.
-
-## v4.1
-
-- Converted central world into four-room visit structure.
-- Added 현장, 조립실, 사무실, 설계실.
-- Added room-specific right-side investment panel.
-
-## v3
-
-- Changed UI to brighter white/gray style.
-- Added 36-unit assembly batch system.
-- Shortened survival action button labels.
-- Added uploaded AI-generated icons and room assets.
-
-## v2
-
-- Added cute cat, dog, and owl worker theme.
-- Moved resources to top.
-- Expanded full-screen layout.
-- Added Korean industrial background direction.
-
-## v1
-
-- Initial HTML/JavaScript browser prototype.
-- Cash, AR, AP, debt, burn, and pressure systems.
-- Left survival actions.
-- Right department upgrades.
+## v4.4.12
+- Renamed to 이번 달까지만 버텨주세요 / Please Let Us Survive This Month.
+- Removed specific company/product branding from visible game text.
+- Changed excess production to increase frame work, not orders.
+- Added forced overtime for backlog/WIP over 12.
+- Reordered assembly flow to order -> frame -> assembly -> PLC/electrical -> QC -> idle/shipment.
+- Added simplified balance sheet, income statement, manufacturing cost statement, and corrected capital impairment rate.
+- Updated event rules: label/tax/obituary no direct cash cost, China copy causes lost order, customer-request losses capped under 10M.
