@@ -1,0 +1,2167 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SJ Applied Tech: Survival Tycoon v4</title>
+  <style>
+    :root {
+      --bg: #eef3f7;
+      --paper: rgba(255,255,255,0.92);
+      --paper-solid: #ffffff;
+      --ink: #1f2b34;
+      --muted: #61727d;
+      --line: #d6e0e7;
+      --line-strong: #b9c7d0;
+      --shadow: 0 16px 42px rgba(40,54,68,0.14);
+      --shadow-soft: 0 8px 22px rgba(40,54,68,0.10);
+      --blue: #2f80ed;
+      --blue-soft: #e7f1ff;
+      --green: #1e9e62;
+      --green-soft: #e8f7ef;
+      --orange: #d98718;
+      --orange-soft: #fff3df;
+      --red: #cf3e3e;
+      --red-soft: #ffe8e8;
+      --violet: #7657d6;
+      --violet-soft: #f0edff;
+      --dark: #18242c;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255,255,255,0.95), rgba(238,243,247,0.82) 38%, rgba(222,232,240,1) 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
+      user-select: none;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      background: linear-gradient(180deg, #fff, #eff5f9);
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), var(--shadow-soft);
+      transition: transform 100ms ease, filter 100ms ease, box-shadow 100ms ease, border-color 100ms ease;
+    }
+    button:hover { filter: brightness(1.02); border-color: #91a9b8; }
+    button:active { transform: translateY(1px); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; filter: grayscale(0.25); box-shadow: none; }
+
+    #app {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .topbar {
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 260px minmax(0,1fr) 318px;
+      gap: 12px;
+      padding: 10px 14px 9px;
+      background: rgba(248,251,253,0.88);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 8px 26px rgba(49,66,82,0.08);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .brand-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #ffffff, #dfeaf2);
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+    .brand-badge img { width: 34px; height: 34px; object-fit: contain; }
+    .brand-title strong { display: block; font-size: 15px; line-height: 1.05; letter-spacing: -0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .brand-title span { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .top-center { display: grid; grid-template-rows: 40px auto; gap: 7px; min-width: 0; }
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .clock, .survival-pill, .route-pill {
+      height: 38px;
+      display: flex;
+      align-items: center;
+      padding: 0 13px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.86);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.95);
+      font-size: 12px;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+    .survival-pill { color: var(--green); font-weight: 800; }
+    .survival-pill.warn { color: var(--orange); background: var(--orange-soft); border-color: rgba(217,135,24,0.35); }
+    .survival-pill.bad { color: var(--red); background: var(--red-soft); border-color: rgba(207,62,62,0.38); }
+    .route-pill { color: var(--violet); max-width: 210px; overflow: hidden; text-overflow: ellipsis; }
+
+    .resource-strip {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .resource-card {
+      min-width: 0;
+      padding: 7px 9px 6px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.88);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.95);
+    }
+    .resource-card label {
+      display: block;
+      font-size: 10px;
+      line-height: 1;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .resource-card strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 15px;
+      line-height: 1.05;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-variant-numeric: tabular-nums;
+    }
+    .resource-card small {
+      display: block;
+      margin-top: 3px;
+      font-size: 9px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .positive { color: var(--green); }
+    .negative { color: var(--red); }
+    .warning { color: var(--orange); }
+    .blue { color: var(--blue); }
+    .violet { color: var(--violet); }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+    .speed-btn, .small-btn {
+      height: 38px;
+      min-width: 43px;
+      padding: 0 10px;
+      font-size: 12px;
+      border-radius: 12px;
+    }
+    .speed-btn.active { border-color: var(--blue); color: var(--blue); background: var(--blue-soft); }
+    .small-btn.danger { border-color: rgba(207,62,62,0.35); color: var(--red); background: var(--red-soft); }
+
+    .game-shell {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 218px minmax(0, 1fr) 340px;
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .left-rail, .right-rail {
+      min-height: 0;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #b9c7d0 transparent;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.74);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .left-rail { padding: 12px; }
+    .right-rail { padding: 12px; }
+
+    .rail-section + .rail-section { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .rail-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 0 2px 9px;
+    }
+    .rail-title strong { font-size: 12px; letter-spacing: -0.01em; }
+    .rail-title span { color: var(--muted); font-size: 10px; white-space: nowrap; }
+
+    .room-nav {
+      display: grid;
+      gap: 7px;
+    }
+    .room-btn {
+      width: 100%;
+      min-height: 50px;
+      display: grid;
+      grid-template-columns: 40px minmax(0,1fr);
+      align-items: center;
+      gap: 8px;
+      padding: 7px;
+      text-align: left;
+      border-radius: 16px;
+    }
+    .room-btn.active {
+      border-color: rgba(47,128,237,0.55);
+      background: linear-gradient(180deg, #f8fbff, #e7f1ff);
+      box-shadow: 0 0 0 2px rgba(47,128,237,0.08), var(--shadow-soft);
+    }
+    .nav-icon {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 13px;
+      background: rgba(255,255,255,0.75);
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .nav-icon img { width: 34px; height: 34px; object-fit: contain; }
+    .room-btn b { display: block; font-size: 12px; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .room-btn small { display: block; margin-top: 3px; color: var(--muted); font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .action-list { display: grid; gap: 7px; }
+    .action-card {
+      position: relative;
+      min-height: 60px;
+      display: grid;
+      grid-template-columns: 42px minmax(0,1fr) 42px;
+      align-items: center;
+      gap: 8px;
+      padding: 7px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.78);
+      box-shadow: var(--shadow-soft);
+    }
+    .action-card.hot { background: linear-gradient(180deg, #fff, #fff1f1); border-color: rgba(207,62,62,0.25); }
+    .action-card.cold { background: linear-gradient(180deg, #fff, #eef7ff); border-color: rgba(47,128,237,0.20); }
+    .action-icon { width: 42px; height: 42px; border-radius: 14px; background: rgba(255,255,255,0.85); border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; }
+    .action-icon img { width: 37px; height: 37px; object-fit: contain; }
+    .action-name { font-weight: 850; font-size: 12px; line-height: 1.1; }
+    .action-sub { margin-top: 3px; font-size: 10px; color: var(--muted); line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .action-card button {
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border-radius: 14px;
+      font-size: 11px;
+      font-weight: 800;
+      box-shadow: none;
+    }
+    .cooldown-bar { position: absolute; left: 10px; right: 10px; bottom: 4px; height: 3px; background: rgba(31,43,52,0.08); border-radius: 999px; overflow: hidden; }
+    .cooldown-fill { height: 100%; background: linear-gradient(90deg, var(--orange), var(--red)); width: 0%; }
+
+    .stage-panel {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: #f7fafc;
+      box-shadow: var(--shadow);
+    }
+    #roomStage { position: absolute; inset: 0; overflow: hidden; background-image: var(--room-bg); background-size: cover; background-position: center; background-repeat: no-repeat; }
+    .room-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transform: scale(1.01); }
+    .room-shade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(255,255,255,0.18), rgba(255,255,255,0.05) 45%, rgba(0,0,0,0.22));
+      pointer-events: none;
+    }
+    .room-shade.light {
+      background: linear-gradient(180deg, rgba(255,255,255,0.80), rgba(255,255,255,0.38) 45%, rgba(255,255,255,0.1));
+      backdrop-filter: blur(1px);
+    }
+    .room-title-card {
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      max-width: min(460px, calc(100% - 36px));
+      padding: 13px 15px;
+      border: 1px solid rgba(255,255,255,0.62);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.78);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .room-title-card h1 { margin: 0; font-size: 22px; line-height: 1.05; letter-spacing: -0.04em; }
+    .room-title-card p { margin: 7px 0 0; font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    .room-kpis {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(110px, auto));
+      gap: 7px;
+    }
+    .floating-kpi {
+      padding: 9px 11px;
+      border: 1px solid rgba(255,255,255,0.65);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.76);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(10px);
+      font-size: 11px;
+    }
+    .floating-kpi label { display: block; color: var(--muted); font-size: 9px; }
+    .floating-kpi strong { display: block; margin-top: 3px; font-size: 14px; font-variant-numeric: tabular-nums; }
+
+    .field-floor {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 9px;
+    }
+    .floor-card {
+      min-height: 92px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.62);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.78);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(10px);
+    }
+    .floor-card b { display: block; font-size: 13px; }
+    .floor-card span { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; line-height: 1.35; }
+    .mini-progress { margin-top: 10px; height: 8px; border-radius: 999px; background: rgba(31,43,52,0.08); overflow: hidden; }
+    .mini-progress > i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #6cb7ff, #77d696); width: 40%; }
+
+    .assembly-board {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 22px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .batch-column {
+      min-height: 320px;
+      display: grid;
+      grid-template-rows: auto minmax(0,1fr) auto;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid rgba(188,201,211,0.75);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.84);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+    .batch-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .batch-head b { font-size: 14px; letter-spacing: -0.02em; }
+    .batch-head em { font-style: normal; font-size: 12px; font-weight: 850; color: var(--blue); }
+    .machine-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 8px;
+      align-content: start;
+    }
+    .machine-cell {
+      aspect-ratio: 1 / 0.72;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f1f5f8;
+      display: grid;
+      place-items: center;
+      color: #9aa8b1;
+      font-size: 11px;
+      font-weight: 800;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+    .machine-cell.done { background: var(--green-soft); color: var(--green); border-color: rgba(30,158,98,0.25); }
+    .machine-cell.work { background: var(--orange-soft); color: var(--orange); border-color: rgba(217,135,24,0.35); animation: pulse 1.1s infinite ease-in-out; }
+    @keyframes pulse { 0%,100%{ transform: scale(1); } 50%{ transform: scale(1.04); } }
+    .batch-note { color: var(--muted); font-size: 11px; line-height: 1.38; }
+
+    .room-hero {
+      position: absolute;
+      left: 28px;
+      bottom: 28px;
+      width: min(420px, 44%);
+      padding: 22px;
+      border: 1px solid rgba(188,201,211,0.75);
+      border-radius: 28px;
+      background: rgba(255,255,255,0.86);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+    .room-hero img { width: 100%; max-height: 245px; object-fit: contain; display: block; }
+    .room-hero h2 { margin: 12px 0 0; font-size: 18px; letter-spacing: -0.03em; }
+    .room-hero p { margin: 7px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .desk-metrics {
+      position: absolute;
+      right: 24px;
+      bottom: 24px;
+      width: min(470px, 46%);
+      display: grid;
+      gap: 10px;
+    }
+    .metric-strip {
+      display: grid;
+      grid-template-columns: 62px minmax(0,1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid rgba(188,201,211,0.75);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.86);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(12px);
+    }
+    .metric-strip img { width: 50px; height: 50px; object-fit: contain; }
+    .metric-strip b { display: block; font-size: 13px; }
+    .metric-strip span { display: block; margin-top: 3px; font-size: 11px; color: var(--muted); }
+    .metric-strip strong { font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+
+
+    .worker-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+    }
+    .worker {
+      position: absolute;
+      width: clamp(44px, 5.2vw, 86px);
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 13px rgba(32,45,57,0.22));
+      transform-origin: 50% 100%;
+      opacity: 0.95;
+      will-change: transform;
+    }
+    .worker-cat { animation: workerWalkA 7.8s infinite ease-in-out; }
+    .worker-dog { animation: workerWalkB 8.8s infinite ease-in-out; }
+    .worker-owl { animation: workerBob 3.4s infinite ease-in-out; }
+    .room-field .worker-cat { left: 38%; top: 39%; }
+    .room-field .worker-dog { left: 49%; top: 53%; width: clamp(46px, 5.8vw, 92px); }
+    .room-field .worker-owl { left: 62%; top: 55%; }
+    .room-assembly .worker-cat { left: 18%; top: 48%; }
+    .room-assembly .worker-dog { left: 50%; top: 31%; width: clamp(46px, 5.8vw, 92px); }
+    .room-assembly .worker-owl { left: 74%; top: 47%; }
+    .room-office .worker-cat { left: 44%; top: 42%; }
+    .room-office .worker-dog { left: 24%; top: 54%; width: clamp(46px, 5.8vw, 92px); }
+    .room-office .worker-owl { left: 68%; top: 54%; }
+    .room-design .worker-cat { left: 30%; top: 53%; }
+    .room-design .worker-dog { left: 54%; top: 37%; width: clamp(46px, 5.8vw, 92px); }
+    .room-design .worker-owl { left: 72%; top: 51%; }
+    @keyframes workerBob {
+      0%, 100% { transform: translate3d(0,0,0) scale(1); }
+      50% { transform: translate3d(0,-7px,0) scale(1.015); }
+    }
+    @keyframes workerWalkA {
+      0%, 100% { transform: translate3d(-5px,0,0) rotate(-1deg); }
+      40% { transform: translate3d(10px,-4px,0) rotate(1deg); }
+      70% { transform: translate3d(4px,1px,0) rotate(0deg); }
+    }
+    @keyframes workerWalkB {
+      0%, 100% { transform: translate3d(8px,0,0) rotate(1deg); }
+      45% { transform: translate3d(-12px,-5px,0) rotate(-1deg); }
+      72% { transform: translate3d(-4px,1px,0) rotate(0deg); }
+    }
+
+
+    .worker-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .worker-sprite {
+      position: absolute;
+      width: clamp(54px, 6.6vw, 105px);
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 14px 14px rgba(31,43,52,0.18));
+      transform-origin: 50% 100%;
+      opacity: 0.94;
+    }
+    .worker-sprite.cat { animation: workerBob 2.7s ease-in-out infinite; }
+    .worker-sprite.dog { animation: workerWalk 5.2s ease-in-out infinite; }
+    .worker-sprite.owl { animation: workerLook 3.8s ease-in-out infinite; }
+    @keyframes workerBob { 0%,100%{ transform: translateY(0) rotate(-1deg); } 50%{ transform: translateY(-7px) rotate(1deg); } }
+    @keyframes workerWalk { 0%,100%{ transform: translateX(-8px) translateY(0); } 50%{ transform: translateX(10px) translateY(-4px); } }
+    @keyframes workerLook { 0%,100%{ transform: translateY(0) scaleX(1); } 35%{ transform: translateY(-4px) scaleX(1.03); } 70%{ transform: translateY(0) scaleX(0.98); } }
+
+    .event-banner {
+      position: absolute;
+      left: 50%;
+      top: 92px;
+      transform: translateX(-50%) translateY(-6px);
+      max-width: min(620px, calc(100% - 40px));
+      padding: 12px 16px;
+      border: 1px solid rgba(207,62,62,0.35);
+      border-radius: 20px;
+      background: rgba(255,241,241,0.92);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      color: var(--red);
+      text-align: center;
+      font-weight: 900;
+      font-size: 13px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+      z-index: 12;
+    }
+    .event-banner.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .event-banner small { display: block; margin-top: 3px; color: #9c4545; font-size: 11px; font-weight: 650; }
+
+    .toast-log { position: absolute; left: 18px; bottom: 18px; width: min(440px, calc(100% - 36px)); z-index: 11; pointer-events: none; }
+    .toast {
+      margin-top: 7px;
+      padding: 8px 11px;
+      border: 1px solid rgba(185,199,208,0.8);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.86);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(10px);
+      font-size: 11px;
+      color: var(--ink);
+      animation: toastIn 220ms ease;
+    }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .panel-card {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.82);
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 10px;
+    }
+    .panel-card h3 { margin: 0; font-size: 14px; letter-spacing: -0.03em; }
+    .panel-card p { margin: 6px 0 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .room-status-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 7px; margin-top: 10px; }
+    .tiny-stat { padding: 8px; border-radius: 13px; border: 1px solid var(--line); background: rgba(248,251,253,0.85); }
+    .tiny-stat label { display: block; color: var(--muted); font-size: 9px; }
+    .tiny-stat strong { display: block; margin-top: 3px; font-size: 13px; font-variant-numeric: tabular-nums; }
+
+    .dept-row {
+      display: grid;
+      grid-template-columns: 48px minmax(0,1fr) 74px;
+      gap: 9px;
+      align-items: center;
+      min-height: 75px;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.82);
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 8px;
+    }
+    .dept-row.locked { opacity: 0.55; filter: grayscale(0.35); }
+    .dept-icon { width: 48px; height: 48px; border-radius: 16px; background: #fff; border: 1px solid var(--line); display: grid; place-items: center; overflow: hidden; }
+    .dept-icon img { width: 42px; height: 42px; object-fit: contain; }
+    .dept-name { display: flex; justify-content: space-between; gap: 8px; min-width: 0; font-weight: 900; font-size: 12px; }
+    .dept-name span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dept-name em { font-style: normal; color: var(--blue); font-size: 11px; }
+    .dept-stats { margin-top: 4px; color: var(--muted); font-size: 10px; line-height: 1.3; }
+    .dept-meter { margin-top: 7px; height: 6px; border-radius: 999px; background: rgba(31,43,52,0.08); overflow: hidden; }
+    .dept-meter > i { display:block; height:100%; border-radius:999px; background: linear-gradient(90deg, #6fd69a, #ffd36c, #ff8080); width: 40%; }
+    .dept-buy { min-height: 50px; padding: 6px; border-radius: 14px; font-size: 11px; line-height: 1.1; font-weight: 850; }
+    .dept-buy span { display: block; margin-top: 3px; color: var(--muted); font-size: 9px; font-weight: 650; }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: 40;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(47,59,69,0.34);
+      backdrop-filter: blur(8px);
+    }
+    .modal-backdrop.show { display: flex; }
+    .modal {
+      width: min(720px, 100%);
+      max-height: calc(100vh - 80px);
+      overflow: auto;
+      border: 1px solid var(--line-strong);
+      border-radius: 26px;
+      background: rgba(255,255,255,0.96);
+      box-shadow: 0 28px 90px rgba(40,54,68,0.28);
+    }
+    .modal-header { padding: 18px 20px 13px; border-bottom: 1px solid var(--line); background: rgba(248,251,253,0.88); }
+    .modal-header h2 { margin: 0; font-size: 21px; letter-spacing: -0.04em; }
+    .modal-header p { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .modal-body { padding: 16px 20px 18px; }
+    .choice-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+    .choice-card { min-height: 122px; padding: 13px; text-align: left; border-radius: 18px; border: 1px solid var(--line-strong); background: linear-gradient(180deg, #fff, #f4f8fb); }
+    .choice-card strong { display:block; font-size: 13px; margin-bottom: 6px; }
+    .choice-card span { display:block; color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .choice-card small { display:block; margin-top: 8px; color: var(--orange); font-size: 10px; line-height: 1.35; }
+    .modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top: 14px; }
+    .modal-actions button { padding: 10px 14px; font-size: 12px; font-weight: 850; }
+    .mini-table { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; margin-bottom: 12px; }
+    .mini-cell { border: 1px solid var(--line); border-radius: 16px; padding: 10px; background: #f8fbfd; }
+    .mini-cell label { display:block; color: var(--muted); font-size: 10px; }
+    .mini-cell strong { display:block; margin-top: 5px; font-size: 14px; font-variant-numeric: tabular-nums; }
+    .journal { margin-top: 12px; display:grid; gap: 6px; }
+    .journal div { padding: 8px 10px; border-radius: 12px; background: #f8fbfd; border: 1px solid var(--line); font-size: 11px; color: var(--muted); }
+
+    @media (max-width: 1100px) {
+      .topbar { grid-template-columns: 210px minmax(0,1fr) 264px; gap: 8px; padding: 8px; }
+      .resource-strip { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .game-shell { grid-template-columns: 184px minmax(0,1fr) 270px; gap: 8px; padding: 8px; }
+      .left-rail, .right-rail { border-radius: 18px; padding: 8px; }
+      .field-floor { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .assembly-board { grid-template-columns: 1fr; overflow-y: auto; top: 110px; }
+      .batch-column { min-height: 220px; }
+      .room-kpis { display:none; }
+      .room-hero, .desk-metrics { position: relative; left: auto; right: auto; bottom: auto; width: auto; margin: 120px 18px 0; }
+      .desk-metrics { margin-top: 12px; }
+    }
+
+
+    .room-bg { opacity: 1; transition: opacity 160ms ease; }
+    .room-bg.ready { opacity: 1; }
+    .ambient-workers {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .worker-sprite {
+      position: absolute;
+      width: clamp(42px, 5.2vw, 72px);
+      height: clamp(42px, 5.2vw, 72px);
+      object-fit: contain;
+      filter: drop-shadow(0 10px 14px rgba(20,35,45,0.24));
+      transform-origin: 50% 100%;
+      opacity: 0.96;
+      animation: idleBob 1.7s ease-in-out infinite;
+    }
+    .worker-sprite.dog { animation: slowWalk 12s ease-in-out infinite, idleBob 1.2s ease-in-out infinite; }
+    .worker-sprite.owl { animation: inspectBob 2.2s ease-in-out infinite; }
+    .worker-sprite.cat.field { left: 35%; bottom: 38%; }
+    .worker-sprite.dog.field { left: 42%; bottom: 26%; }
+    .worker-sprite.owl.field { left: 59%; bottom: 27%; }
+    .worker-sprite.cat.assembly { left: 26%; bottom: 31%; }
+    .worker-sprite.dog.assembly { left: 51%; bottom: 36%; }
+    .worker-sprite.owl.assembly { left: 72%; bottom: 32%; }
+    .worker-sprite.cat.office { left: 45%; bottom: 40%; }
+    .worker-sprite.dog.office { left: 23%; bottom: 26%; }
+    .worker-sprite.owl.office { left: 67%; bottom: 24%; }
+    .worker-sprite.cat.design { left: 32%; bottom: 24%; }
+    .worker-sprite.dog.design { left: 53%; bottom: 42%; }
+    .worker-sprite.owl.design { left: 72%; bottom: 32%; }
+    @keyframes idleBob {
+      0%,100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-4px) scale(1.015); }
+    }
+    @keyframes slowWalk {
+      0%,100% { margin-left: -10px; }
+      50% { margin-left: 18px; }
+    }
+    @keyframes inspectBob {
+      0%,100% { transform: rotate(-1deg) translateY(0); }
+      50% { transform: rotate(1deg) translateY(-3px); }
+    }
+
+    @media (max-width: 760px) {
+      html, body { overflow: hidden; }
+      #app { grid-template-rows: auto minmax(0, 1fr); }
+      .topbar {
+        grid-template-columns: 1fr;
+        gap: 7px;
+        padding: 7px;
+      }
+      .brand { display: none; }
+      .top-center { grid-template-rows: auto auto; gap: 6px; }
+      .status-row { justify-content: flex-start; overflow-x: auto; padding-bottom: 2px; }
+      .clock, .survival-pill, .route-pill { height: 32px; padding: 0 10px; font-size: 11px; }
+      .resource-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 5px;
+      }
+      .resource-card { padding: 6px 7px; border-radius: 12px; }
+      .resource-card strong { font-size: 13px; }
+      .resource-card small { display: none; }
+      .controls {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        gap: 4px;
+      }
+      .speed-btn, .small-btn { height: 32px; min-width: 34px; padding: 0 7px; font-size: 11px; }
+      #saveBtn, #resetBtn { display: none; }
+      .game-shell {
+        position: relative;
+        display: block;
+        padding: 0;
+        min-height: 0;
+      }
+      .stage-panel {
+        position: absolute;
+        inset: 0;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+      }
+      .left-rail {
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        z-index: 30;
+        height: 168px;
+        display: grid;
+        grid-template-rows: 54px 1fr;
+        gap: 6px;
+        padding: 8px;
+        border-radius: 20px;
+        overflow: hidden;
+      }
+      .left-rail .rail-section { margin: 0; padding: 0; border: 0; min-width: 0; }
+      .left-rail .rail-title { display: none; }
+      .room-nav { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+      .room-btn { min-width: 112px; min-height: 48px; grid-template-columns: 34px 1fr; padding: 6px; }
+      .nav-icon { width: 34px; height: 34px; border-radius: 12px; }
+      .nav-icon img { width: 30px; height: 30px; }
+      .action-list { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+      .action-card { min-width: 156px; min-height: 78px; grid-template-columns: 38px 1fr; padding: 7px; }
+      .action-icon { width: 38px; height: 38px; }
+      .action-icon img { width: 34px; height: 34px; }
+      .action-card button { position: absolute; right: 7px; bottom: 7px; width: 42px; height: 28px; border-radius: 10px; }
+      .action-sub { max-width: 90px; }
+      .right-rail { display: none; }
+      .room-title-card { left: 12px; top: 12px; right: 12px; max-width: none; padding: 10px 12px; border-radius: 16px; }
+      .room-title-card h1 { font-size: 18px; }
+      .room-title-card p { font-size: 11px; }
+      .room-kpis { display: none; }
+      .field-floor, .assembly-board, .desk-metrics, .room-hero { display: none; }
+      .event-banner { top: 72px; max-width: calc(100% - 24px); }
+      .toast-log { display: none; }
+      .worker-sprite { width: 48px; height: 48px; }
+    }
+
+
+    @media (max-width: 760px) {
+      html, body { overflow: hidden; }
+      #app { grid-template-rows: auto minmax(0,1fr); }
+      .topbar { grid-template-columns: 1fr; gap: 7px; padding: 8px; }
+      .brand { display: none; }
+      .top-center { grid-template-rows: auto auto; }
+      .status-row { justify-content: space-between; }
+      .clock, .survival-pill, .route-pill { height: 30px; padding: 0 9px; font-size: 10px; }
+      .resource-strip { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 5px; }
+      .resource-card { padding: 5px 7px; border-radius: 11px; }
+      .resource-card label { font-size: 9px; }
+      .resource-card strong { font-size: 13px; }
+      .resource-card small { display:none; }
+      .controls { justify-content: center; flex-wrap: wrap; gap: 4px; }
+      .speed-btn, .small-btn { height: 30px; min-width: 36px; padding: 0 7px; font-size: 11px; }
+      .game-shell {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(0,1fr) auto;
+        padding: 7px;
+        gap: 7px;
+      }
+      .stage-panel { border-radius: 18px; min-height: 0; }
+      .left-rail {
+        order: 2;
+        display: grid;
+        grid-template-rows: auto auto;
+        max-height: 190px;
+        border-radius: 18px;
+        padding: 8px;
+        overflow: hidden;
+      }
+      .right-rail { display:none; }
+      .rail-section + .rail-section { margin-top: 7px; padding-top: 7px; }
+      .rail-title { margin-bottom: 6px; }
+      .room-nav { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 5px; }
+      .room-btn { min-height: 44px; grid-template-columns: 30px minmax(0,1fr); gap: 5px; padding: 5px; border-radius: 13px; }
+      .nav-icon { width: 30px; height: 30px; border-radius: 10px; }
+      .nav-icon img { width: 27px; height: 27px; }
+      .room-btn b { font-size: 11px; }
+      .room-btn small { display:none; }
+      .action-list { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 5px; }
+      .action-card { grid-template-columns: 30px minmax(0,1fr); min-height: 48px; padding: 5px; border-radius: 13px; }
+      .action-icon { width: 30px; height: 30px; border-radius: 10px; }
+      .action-icon img { width: 27px; height: 27px; }
+      .action-name { font-size: 10px; }
+      .action-sub { display:none; }
+      .action-card button { display:none; }
+      .room-title-card { left: 12px; top: 12px; max-width: 62%; padding: 10px 12px; border-radius: 16px; }
+      .room-title-card h1 { font-size: 18px; }
+      .room-title-card p { font-size: 10px; }
+      .room-kpis { display: none; }
+      .field-floor { left: 12px; right: 12px; bottom: 12px; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 7px; }
+      .floor-card { padding: 8px; }
+      .floor-card b { font-size: 11px; }
+      .floor-card span { display:none; }
+      .assembly-board { left: 10px; right: 10px; bottom: 10px; grid-template-columns: 1fr; gap: 6px; }
+      .batch-column { padding: 8px; }
+      .batch-note { display:none; }
+      .machine-grid { grid-template-columns: repeat(12, 1fr); gap: 3px; }
+      .machine-cell { height: 16px; font-size: 8px; border-radius: 5px; }
+      .room-hero, .desk-metrics { position: absolute; left: 12px; right: 12px; bottom: 12px; width: auto; margin: 0; }
+      .room-hero { padding: 12px; }
+      .room-hero img { display:none; }
+      .room-hero h2 { font-size: 16px; margin-top: 0; }
+      .metric-strip { padding: 8px; }
+      .metric-strip img { width: 28px; height: 28px; }
+      .metric-strip b { font-size: 11px; }
+      .worker-sprite { width: calc(var(--size, 66px) * 0.76); height: calc(var(--size, 66px) * 0.76); }
+      .toast-log { left: 10px; right: 10px; bottom: 200px; width: auto; }
+    }
+
+
+
+    @media (max-width: 780px) {
+      html, body { overflow: auto; }
+      #app { height: auto; min-height: 100svh; }
+      .topbar { grid-template-columns: 1fr; gap: 8px; position: sticky; top: 0; }
+      .brand { min-height: 38px; }
+      .top-center { grid-template-rows: auto auto; }
+      .status-row { justify-content: flex-start; overflow-x: auto; padding-bottom: 2px; }
+      .resource-strip { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .controls { justify-content: flex-start; overflow-x: auto; padding-bottom: 2px; }
+      .game-shell { grid-template-columns: 1fr; grid-template-rows: minmax(520px, 62svh) auto auto; gap: 8px; padding: 8px; }
+      .stage-panel { min-height: 520px; order: 1; }
+      .left-rail { order: 2; max-height: none; }
+      .right-rail { order: 3; max-height: none; }
+      .room-nav { grid-template-columns: repeat(4, minmax(78px, 1fr)); }
+      .room-btn { grid-template-columns: 1fr; justify-items: center; text-align: center; min-height: 78px; }
+      .room-btn small { display: none; }
+      .action-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .action-card { grid-template-columns: 34px minmax(0,1fr); min-height: 72px; }
+      .action-card button { grid-column: 1 / -1; width: 100%; height: 30px; }
+      .action-icon { width: 34px; height: 34px; }
+      .action-icon img { width: 30px; height: 30px; }
+      .room-title-card { left: 12px; top: 12px; max-width: calc(100% - 24px); padding: 11px 12px; }
+      .room-title-card h1 { font-size: 18px; }
+      .room-title-card p { font-size: 11px; }
+      .field-floor { left: 12px; right: 12px; bottom: 12px; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 7px; }
+      .floor-card { min-height: 76px; padding: 9px; }
+      .assembly-board { left: 12px; right: 12px; bottom: 12px; top: 112px; overflow-y: auto; grid-template-columns: 1fr; gap: 8px; }
+      .batch-column { min-height: 190px; padding: 10px; }
+      .room-hero, .desk-metrics { position: absolute; left: 12px; right: 12px; bottom: 12px; width: auto; margin: 0; padding: 14px; }
+      .room-hero img { display: none; }
+      .desk-metrics { top: 210px; bottom: auto; max-height: calc(100% - 230px); overflow-y: auto; }
+      .metric-strip { grid-template-columns: 42px minmax(0,1fr) auto; padding: 9px; }
+      .metric-strip img { width: 36px; height: 36px; }
+      .dept-row { grid-template-columns: 42px minmax(0,1fr) 66px; }
+      .worker { width: clamp(36px, 11vw, 66px); }
+    }
+
+
+
+    @media (max-width: 720px) {
+      body { overflow: auto; }
+      #app { min-height: 100svh; height: auto; overflow: visible; }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 8px;
+        padding: 8px;
+      }
+      .brand { min-height: 42px; }
+      .brand-badge { width: 34px; height: 34px; border-radius: 12px; }
+      .brand-title strong { font-size: 13px; }
+      .brand-title span { font-size: 10px; }
+      .top-center { gap: 7px; }
+      .status-row { justify-content: flex-start; overflow-x: auto; padding-bottom: 2px; }
+      .clock, .survival-pill, .route-pill { padding: 7px 9px; font-size: 11px; }
+      .resource-strip { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 6px; }
+      .resource-card { padding: 7px 8px; border-radius: 14px; }
+      .resource-card strong { font-size: 14px; }
+      .controls { justify-content: space-between; gap: 6px; }
+      .speed-btn, .small-btn { flex: 1; min-width: 0; padding: 8px 6px; }
+      .game-shell {
+        height: auto;
+        min-height: calc(100svh - 132px);
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(460px, 62svh) auto auto;
+        gap: 8px;
+        padding: 8px;
+        overflow: visible;
+      }
+      .stage-panel { order: 1; min-height: 460px; border-radius: 20px; }
+      .left-rail { order: 2; max-height: none; overflow: visible; border-radius: 18px; }
+      .right-rail { order: 3; max-height: none; overflow: visible; border-radius: 18px; }
+      .room-nav { grid-template-columns: repeat(4, minmax(0,1fr)); }
+      .room-btn { grid-template-columns: 1fr; text-align: center; min-height: 76px; padding: 8px 5px; gap: 5px; }
+      .room-btn .nav-icon { margin: 0 auto; width: 34px; height: 34px; }
+      .room-btn small { display: none; }
+      .action-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 7px; }
+      .action-card { grid-template-columns: 34px minmax(0,1fr) 46px; padding: 8px; min-height: 68px; }
+      .action-sub { font-size: 10px; }
+      .room-title-card { left: 10px; right: 10px; top: 10px; max-width: none; padding: 10px 12px; border-radius: 16px; }
+      .room-title-card h1 { font-size: 18px; }
+      .room-title-card p { font-size: 11px; }
+      .room-kpis { display: none; }
+      .field-floor { left: 10px; right: 10px; bottom: 10px; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 7px; }
+      .floor-card { min-height: 82px; padding: 10px; border-radius: 16px; }
+      .floor-card span { display: none; }
+      .assembly-board { left: 10px; right: 10px; top: 112px; bottom: 10px; grid-template-columns: 1fr; gap: 8px; overflow-y: auto; }
+      .batch-column { min-height: 170px; padding: 10px; border-radius: 18px; }
+      .machine-grid { grid-template-columns: repeat(6, minmax(0,1fr)); gap: 5px; }
+      .batch-note { display: none; }
+      .room-hero { left: 10px; right: 10px; bottom: auto; top: 112px; width: auto; padding: 12px; border-radius: 18px; }
+      .room-hero img { display: none; }
+      .desk-metrics { left: 10px; right: 10px; bottom: 10px; width: auto; gap: 7px; }
+      .metric-strip { grid-template-columns: 40px minmax(0,1fr) auto; padding: 8px; border-radius: 16px; }
+      .metric-strip img { width: 32px; height: 32px; }
+      .worker-sprite { width: clamp(42px, 13vw, 68px); opacity: 0.9; }
+    }
+
+
+    /* v4.2 hotfix: keep room images visible and use lightweight CSS character motion */
+    .room-bg { opacity: 1 !important; }
+    .room-bg.ready { opacity: 1 !important; }
+    .worker-layer { position:absolute; inset:0; z-index:6; pointer-events:none; overflow:hidden; }
+    .worker { position:absolute; width:clamp(42px,5.2vw,72px); height:clamp(42px,5.2vw,72px); object-fit:contain; filter:drop-shadow(0 10px 14px rgba(20,35,45,0.24)); transform-origin:50% 100%; opacity:.96; animation: idleBob 1.7s ease-in-out infinite; }
+    .worker-dog { animation: slowWalk 12s ease-in-out infinite, idleBob 1.2s ease-in-out infinite; }
+    .worker-owl { animation: inspectBob 2.2s ease-in-out infinite; }
+    .room-field .worker-cat { left:35%; bottom:38%; }
+    .room-field .worker-dog { left:42%; bottom:26%; }
+    .room-field .worker-owl { left:59%; bottom:27%; }
+    .room-assembly .worker-cat { left:26%; bottom:31%; }
+    .room-assembly .worker-dog { left:51%; bottom:36%; }
+    .room-assembly .worker-owl { left:72%; bottom:32%; }
+    .room-office .worker-cat { left:45%; bottom:40%; }
+    .room-office .worker-dog { left:23%; bottom:26%; }
+    .room-office .worker-owl { left:67%; bottom:24%; }
+    .room-design .worker-cat { left:32%; bottom:24%; }
+    .room-design .worker-dog { left:53%; bottom:42%; }
+    .room-design .worker-owl { left:72%; bottom:32%; }
+
+
+
+    /* v3.1 image loading fix: room backgrounds must stay visible and stable. */
+    .room-bg { opacity: 1 !important; }
+    img { -webkit-user-drag: none; }
+
+
+
+    /* v4.1 hotfix: resolved image path aliases and stable room rendering. */
+    .room-bg { opacity: 1 !important; background: #eef3f7; }
+    .room-bg[src=""] { display: none; }
+    img { -webkit-user-drag: none; }
+    .worker-layer { position:absolute; inset:0; z-index:6; pointer-events:none; overflow:hidden; }
+    .worker { position:absolute; width:clamp(42px,5.2vw,72px); height:auto; object-fit:contain; filter:drop-shadow(0 10px 14px rgba(20,35,45,0.24)); transform-origin:50% 100%; opacity:.96; animation: idleBob 1.7s ease-in-out infinite; }
+    .worker-dog { animation: slowWalk 12s ease-in-out infinite, idleBob 1.2s ease-in-out infinite; }
+    .worker-owl { animation: inspectBob 2.2s ease-in-out infinite; }
+    @keyframes idleBob { 0%,100%{ transform:translateY(0) rotate(-1deg); } 50%{ transform:translateY(-7px) rotate(1deg); } }
+    @keyframes slowWalk { 0%,100%{ margin-left:-8px; } 50%{ margin-left:12px; } }
+    @keyframes inspectBob { 0%,100%{ transform:translateY(0) scaleX(1); } 45%{ transform:translateY(-4px) scaleX(1.03); } }
+    @media (max-width: 740px) {
+      html, body { overflow: hidden; }
+      #app { grid-template-rows: auto minmax(0,1fr) auto; }
+      .topbar { grid-template-columns: 1fr; gap: 6px; padding: 7px; }
+      .brand { display: none; }
+      .top-center { grid-template-rows: auto auto; }
+      .status-row { justify-content: space-between; gap: 5px; }
+      .clock, .survival-pill, .route-pill { height: 30px; padding: 0 8px; font-size: 10px; }
+      .resource-strip { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 4px; }
+      .resource-card { padding: 5px 6px; border-radius: 10px; }
+      .resource-card label { font-size: 9px; }
+      .resource-card strong { font-size: 12px; }
+      .resource-card small { display:none; }
+      .controls { justify-content: center; }
+      .speed-btn, .small-btn { height: 32px; min-width: 38px; padding: 0 8px; font-size: 11px; border-radius: 10px; }
+      .game-shell { grid-template-columns: 1fr; grid-template-rows: minmax(0,1fr) auto; padding: 6px; gap: 6px; }
+      .left-rail { order: 2; display: grid; grid-template-columns: 1fr; max-height: 150px; border-radius: 16px; padding: 6px; }
+      .right-rail { display:none; }
+      .stage-panel { order:1; min-height:0; border-radius:18px; }
+      .rail-section + .rail-section { margin-top: 6px; padding-top: 6px; }
+      .rail-title { margin-bottom: 5px; }
+      .room-nav { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 5px; }
+      .room-btn { min-height: 44px; grid-template-columns: 28px minmax(0,1fr); gap: 5px; padding: 5px; border-radius: 12px; }
+      .nav-icon { width: 28px; height: 28px; border-radius: 9px; }
+      .nav-icon img { width: 24px; height: 24px; }
+      .room-btn b { font-size: 11px; }
+      .room-btn small { display: none; }
+      .action-list { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 5px; }
+      .action-card { min-height: 42px; grid-template-columns: 28px minmax(0,1fr); padding: 5px; border-radius: 12px; }
+      .action-card button { display:none; }
+      .action-icon { width: 28px; height: 28px; border-radius: 9px; }
+      .action-icon img { width: 24px; height:24px; }
+      .action-name { font-size: 10px; }
+      .action-sub { display:none; }
+      .room-title-card { left: 10px; top: 10px; max-width: calc(100% - 20px); padding: 10px 12px; border-radius: 16px; }
+      .room-title-card h1 { font-size: 18px; }
+      .room-title-card p { font-size: 10px; }
+      .room-kpis { display:none; }
+      .field-floor { left: 10px; right: 10px; bottom: 10px; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 6px; }
+      .floor-card { min-height: 66px; padding: 8px; border-radius: 14px; }
+      .floor-card b { font-size: 11px; }
+      .floor-card span { display:none; }
+      .assembly-board { left: 10px; right: 10px; top: 94px; bottom: 10px; grid-template-columns: 1fr; gap: 6px; overflow-y:auto; }
+      .batch-column { min-height: 136px; padding: 8px; border-radius: 16px; }
+      .machine-grid { grid-template-columns: repeat(6, minmax(0,1fr)); gap: 4px; }
+      .batch-note { display:none; }
+      .room-hero { left: 10px; right: 10px; bottom: auto; top: 92px; width: auto; padding: 11px; border-radius: 16px; }
+      .room-hero img { display:none; }
+      .desk-metrics { left: 10px; right: 10px; bottom: 10px; width: auto; gap: 6px; }
+      .metric-strip { grid-template-columns: 34px minmax(0,1fr) auto; padding: 7px; border-radius: 14px; }
+      .metric-strip img { width: 28px; height: 28px; }
+      .worker { width: clamp(38px, 12vw, 62px); }
+    }
+
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-badge"><img src="assets/icons/visit_workshop.png" alt="" /></div>
+        <div class="brand-title">
+          <strong>SJ Applied Tech</strong>
+          <span>36대 배치 · 제조 생존 타이쿤 v4.2</span>
+        </div>
+      </div>
+
+      <div class="top-center">
+        <div class="status-row">
+          <div id="clock" class="clock">2026-05-25 월 09:00</div>
+          <div id="marginPill" class="survival-pill">생존 82일</div>
+          <div id="routePill" class="route-pill">전략 미선택</div>
+        </div>
+        <div class="resource-strip">
+          <div class="resource-card"><label>현금 Cash</label><strong id="cashVal" class="positive">0</strong><small id="cashDelta">어제 0</small></div>
+          <div class="resource-card"><label>매출채권 AR</label><strong id="arVal" class="blue">0</strong><small>회수 지연 리스크</small></div>
+          <div class="resource-card"><label>미지급금 AP</label><strong id="apVal" class="warning">0</strong><small>협력사 압박</small></div>
+          <div class="resource-card"><label>부채 Debt</label><strong id="debtVal" class="negative">0</strong><small id="interestVal">이자 0/일</small></div>
+          <div class="resource-card"><label>월 번 Burn</label><strong id="burnVal">0</strong><small>현금흐름 기준</small></div>
+          <div class="resource-card"><label>압박 Pressure</label><strong id="pressureVal" class="violet">0%</strong><small id="riskVal">법무 0 / 사기 0</small></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="pauseBtn" class="speed-btn">⏸</button>
+        <button class="speed-btn active" data-speed="1">1x</button>
+        <button class="speed-btn" data-speed="4">4x</button>
+        <button class="speed-btn" data-speed="8">8x</button>
+        <button id="saveBtn" class="small-btn">저장</button>
+        <button id="resetBtn" class="small-btn danger">리셋</button>
+      </div>
+    </header>
+
+    <main class="game-shell">
+      <aside class="left-rail">
+        <section class="rail-section">
+          <div class="rail-title"><strong>현장 방문</strong><span>full view</span></div>
+          <div id="roomNav" class="room-nav"></div>
+        </section>
+        <section class="rail-section">
+          <div class="rail-title"><strong>생존 액션</strong><span>짧게, 강하게</span></div>
+          <div id="actions" class="action-list"></div>
+        </section>
+      </aside>
+
+      <section class="stage-panel">
+        <div id="roomStage"></div>
+        <div id="eventBanner" class="event-banner"></div>
+        <div id="toastLog" class="toast-log"></div>
+      </section>
+
+      <aside class="right-rail">
+        <div id="roomPanel"></div>
+        <div class="rail-title"><strong>공간 투자</strong><span>current room</span></div>
+        <div id="departments"></div>
+      </aside>
+    </main>
+
+    <div id="modalBackdrop" class="modal-backdrop">
+      <div class="modal" id="modal"></div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  "use strict";
+
+  const STORAGE_KEY = "sj_applied_tech_survival_tycoon_v42";
+  const START_DATE = new Date(2026, 4, 25, 9, 0, 0, 0);
+  const DAY_NAMES = ["일", "월", "화", "수", "목", "금", "토"];
+  const MS_PER_HOUR = 260;
+  const rand = (min, max) => min + Math.random() * (max - min);
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+  const assets = {
+    fieldBg: "assets/rooms/field.png",
+    assemblyBg: "assets/rooms/assembly.png",
+    officeBg: "assets/rooms/office.png",
+    designBg: "assets/rooms/design.png",
+    koreaBg: "assets/rooms/korea_industrial_bg.png",
+    claim: "assets/icons/action_claim.png",
+    deadline: "assets/icons/action_deadline.png",
+    apHold: "assets/icons/action_payables.png",
+    factoring: "assets/icons/action_factoring.png",
+    meeting: "assets/icons/action_meeting.png",
+    breakroom: "assets/icons/action_breakroom.png",
+    safety: "assets/icons/icon_safety.png",
+    gear: "assets/icons/icon_broken_gear.png",
+    money: "assets/icons/icon_money.png",
+    clock: "assets/icons/icon_clock.png",
+    warning: "assets/icons/icon_warning.png",
+    box: "assets/icons/icon_box.png",
+    lightbulb: "assets/icons/icon_lightbulb.png",
+    wrench: "assets/icons/icon_wrench.png",
+    facilityField: "assets/icons/visit_workshop.png",
+    facilityAssembly: "assets/icons/visit_assembly.png",
+    facilityOffice: "assets/icons/visit_office.png",
+    facilityDesign: "assets/icons/visit_design.png",
+    facilityWarehouse: "assets/icons/visit_warehouse.png"
+  };
+
+
+  function preloadImages() {
+    Object.values(assets).forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }
+
+  const roomDefs = {
+    field: {
+      name: "MCT · CNC 현장", short: "현장", icon: assets.facilityField,
+      bg: assets.fieldBg,
+      desc: "절삭과 가공이 돈을 만든다. 동시에 피로와 사고 가능성도 여기서 생긴다.",
+      mood: "가동률과 안전 사이의 줄타기"
+    },
+    assembly: {
+      name: "아쎄이 조립실", short: "조립실", icon: assets.facilityAssembly,
+      bg: assets.assemblyBg,
+      desc: "SMT 스크린 프린터 36대를 12대씩 세 묶음으로 밀어낸다.",
+      mood: "보이는 성취와 지연의 압박"
+    },
+    office: {
+      name: "사무실", short: "사무실", icon: assets.facilityOffice,
+      bg: assets.officeBg,
+      desc: "현금, 채권, 미지급금, 은행, 협력사가 한 책상 위에서 싸운다.",
+      mood: "정리된 공포"
+    },
+    design: {
+      name: "설계실", short: "설계실", icon: assets.facilityDesign,
+      bg: assets.designBg,
+      desc: "오늘 바로 돈은 안 되지만, 안 하면 다음 배치도 같은 늪에 빠진다.",
+      mood: "미래를 위한 손실"
+    }
+  };
+
+  const deptDefs = {
+    factory: {
+      icon: assets.facilityField, room: "field", name: "MCT · CNC 가공셀", baseCost: 420_000_000, scale: 1.34,
+      output: 62_000_000, burn: 22_000_000, stress: 8,
+      note: "가공량 증가 / 안전 부담 증가"
+    },
+    procurement: {
+      icon: assets.facilityWarehouse, room: "field", name: "공구 · 소재 · 외주", baseCost: 240_000_000, scale: 1.29,
+      output: 7_000_000, burn: 8_000_000, stress: -3,
+      note: "단가와 납품 리스크 완화"
+    },
+    office: {
+      icon: assets.facilityAssembly, room: "assembly", name: "SMT 조립 · 풀아쎄이", baseCost: 260_000_000, scale: 1.30,
+      output: 18_000_000, burn: 9_000_000, stress: -4,
+      note: "36대 배치 진행 속도 증가"
+    },
+    api: {
+      icon: assets.lightbulb, room: "assembly", name: "ERP · MES 추적", baseCost: 180_000_000, scale: 1.42,
+      output: 13_000_000, burn: 4_000_000, stress: -4,
+      note: "보고 자동화 / 압박 완화"
+    },
+    finance: {
+      icon: assets.facilityOffice, room: "office", name: "자금 · 회수", baseCost: 330_000_000, scale: 1.33,
+      output: 6_000_000, burn: 9_000_000, stress: -2,
+      note: "AR 회수와 이자 부담 완화"
+    },
+    sales: {
+      icon: assets.deadline, room: "office", name: "영업 · 견적 · CS", baseCost: 280_000_000, scale: 1.31,
+      output: 34_000_000, burn: 12_000_000, stress: 7,
+      note: "수주 증가 / 클레임 대응"
+    },
+    vendor: {
+      icon: assets.apHold, room: "office", name: "대기업 벤더락", baseCost: 520_000_000, scale: 1.38,
+      output: 78_000_000, burn: 18_000_000, stress: 6,
+      note: "고정 물량 / 미지급금 부담"
+    },
+    design: {
+      icon: assets.facilityDesign, room: "design", name: "설계 표준화", baseCost: 300_000_000, scale: 1.32,
+      output: 12_000_000, burn: 8_000_000, stress: -5,
+      note: "불량률과 재작업 감소"
+    }
+  };
+
+  const actionDefs = {
+    severance: {
+      title: "클레임 무마", icon: assets.claim, tone: "hot", cdDays: 5,
+      sub: "현금↓ 법무↓ 기억↑",
+      run: () => {
+        const cost = 430_000_000 + state.incidents * 110_000_000;
+        state.cash -= cost;
+        state.legalRisk = clamp(state.legalRisk - 14, 0, 100);
+        state.morale = clamp(state.morale - 3, 0, 100);
+        state.reputation = clamp(state.reputation - 3, 0, 100);
+        state.safety = clamp(state.safety + 4, 0, 100);
+        addToast(`합의금 ${money(cost)} 집행. 문제는 줄었지만 기억은 남았다.`);
+        flashBanner("클레임 무마", `현금 -${money(cost)} / 법무 리스크 감소`);
+      }
+    },
+    salesPush: {
+      title: "납기 압박", icon: assets.deadline, tone: "hot", cdDays: 3,
+      sub: "AR↑ 안전↓ 사기↓",
+      run: () => {
+        const orders = 360_000_000 + deptLevel("sales") * 58_000_000 + deptLevel("factory") * 46_000_000;
+        state.receivables += orders;
+        state.morale = clamp(state.morale - 5, 0, 100);
+        state.safety = clamp(state.safety - 6, 0, 100);
+        state.reputation = clamp(state.reputation + 2, 0, 100);
+        state.pressure = clamp(state.pressure + 6, 0, 100);
+        addToast(`납기 압박으로 수주 ${money(orders)} 발생. 현장은 말이 줄었다.`);
+        flashBanner("납기 압박 실행", `AR +${money(orders)} / 안전 -6`);
+      }
+    },
+    delayPay: {
+      title: "결제 홀드", icon: assets.apHold, tone: "hot", cdDays: 4,
+      sub: "현금↑ AP↑ 신뢰↓",
+      run: () => {
+        const relief = 320_000_000 + deptLevel("procurement") * 24_000_000;
+        state.cash += relief;
+        state.payables += relief * 1.35;
+        state.vendorTrust = clamp(state.vendorTrust - 10, 0, 100);
+        state.legalRisk = clamp(state.legalRisk + 5, 0, 100);
+        state.pressure = clamp(state.pressure + 6, 0, 100);
+        addToast(`결제를 미뤄 현금 ${money(relief)} 확보. 협력사는 기록한다.`);
+        flashBanner("결제 홀드", `현금 +${money(relief)} / AP +${money(relief * 1.35)}`);
+      }
+    },
+    factoring: {
+      title: "채권 할인", icon: assets.factoring, tone: "cold", cdDays: 5,
+      sub: "현금↑ AR↓ 수수료",
+      run: () => {
+        const amount = Math.min(state.receivables * 0.34, 1_450_000_000 + deptLevel("finance") * 105_000_000);
+        if (amount < 80_000_000) {
+          addToast("할인할 채권이 부족하다.");
+          return false;
+        }
+        const fee = amount * (0.125 - Math.min(0.055, deptLevel("finance") * 0.005));
+        state.receivables -= amount;
+        state.cash += amount - fee;
+        state.reputation = clamp(state.reputation - 3, 0, 100);
+        state.legalRisk = clamp(state.legalRisk + 2, 0, 100);
+        addToast(`채권 ${money(amount)} 할인. 수수료 ${money(fee)} 지출.`);
+        flashBanner("채권 현금화", `현금 +${money(amount - fee)} / 평판 -3`);
+        return true;
+      }
+    },
+    report: {
+      title: "대책회의", icon: assets.meeting, tone: "cold", cdDays: 2,
+      sub: "숫자 확인 / 방향 선택",
+      run: () => openWeeklyReport(false)
+    },
+    snackTime: {
+      title: "휴게실", icon: assets.breakroom, tone: "cold", cdDays: 4,
+      sub: "사기↑ 압박↓ 안전↑",
+      run: () => {
+        const cost = 120_000_000 + deptLevel("office") * 20_000_000;
+        state.cash -= cost;
+        state.morale = clamp(state.morale + 12, 0, 100);
+        state.safety = clamp(state.safety + 7, 0, 100);
+        state.pressure = clamp(state.pressure - 9, 0, 100);
+        state.reputation = clamp(state.reputation + 2, 0, 100);
+        addToast(`휴게실 운영비 ${money(cost)}. 잠깐 사람답게 숨을 쉬었다.`);
+        flashBanner("휴게실", `사기 +12 / 압박 -9`);
+        return true;
+      }
+    }
+  };
+
+  let state = null;
+  let lastFrame = performance.now();
+  let hourAccumulator = 0;
+  let autosaveTimer = 0;
+  let renderDirty = true;
+  let modalOpen = false;
+  let lastRoomStageSig = "";
+  let bannerUntil = 0;
+  let toasts = [];
+
+  function createDefaultState() {
+    const depts = {};
+    for (const key of Object.keys(deptDefs)) {
+      depts[key] = { level: key === "vendor" ? 0 : 1, unlocked: key !== "vendor", boost: 0 };
+    }
+    return {
+      version: 41,
+      started: false,
+      currentRoom: "field",
+      route: "전략 미선택",
+      routeKey: null,
+      minutes: 9 * 60,
+      day: 1,
+      speed: 1,
+      paused: false,
+      cash: 5_000_000_000,
+      receivables: 1_250_000_000,
+      payables: 1_780_000_000,
+      debt: 3_600_000_000,
+      morale: 58,
+      safety: 66,
+      reputation: 57,
+      vendorTrust: 54,
+      legalRisk: 24,
+      pressure: 42,
+      incidents: 0,
+      deaths: 0,
+      monthProfit: 0,
+      todayCashDelta: 0,
+      lastDayCash: 5_000_000_000,
+      lastBurn: 0,
+      lastOrders: 0,
+      lastCollected: 0,
+      lastCosts: 0,
+      assembly: { frame: 0, plc: 0, idle: 0, progress: 0, shipments: 0, rework: 0, lastMade: 0 },
+      depts,
+      cooldowns: { severance: 0, salesPush: 0, delayPay: 0, report: 0, factoring: 0, snackTime: 0 },
+      flags: { gameOver: false, stabilized: false, routeEventShown: false },
+      journal: []
+    };
+  }
+
+  function money(n) {
+    const sign = n < 0 ? "-" : "";
+    const abs = Math.abs(n);
+    if (abs >= 1_000_000_000_000) return `${sign}${(abs / 1_000_000_000_000).toFixed(abs >= 10_000_000_000_000 ? 1 : 2)}조`;
+    if (abs >= 100_000_000) return `${sign}${(abs / 100_000_000).toFixed(abs >= 1_000_000_000 ? 1 : 2)}억`;
+    if (abs >= 10_000) return `${sign}${(abs / 10_000).toFixed(0)}만`;
+    return `${sign}${Math.round(abs).toLocaleString("ko-KR")}`;
+  }
+  function pct(v) { return `${Math.round(v)}%`; }
+  function escapeHtml(s) { return String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+  function deptLevel(key) { return state.depts[key]?.level || 0; }
+  function deptCost(key) {
+    const d = deptDefs[key];
+    const lv = deptLevel(key);
+    return Math.round(d.baseCost * Math.pow(d.scale, lv) * (state.routeKey === "bank" && key === "finance" ? 0.86 : 1));
+  }
+  function deptOutput(key) { return Math.round(deptDefs[key].output * deptLevel(key) * (1 + deptLevel("api") * 0.025)); }
+  function deptBurn(key) { return Math.round(deptDefs[key].burn * deptLevel(key) * (1 - Math.min(0.20, deptLevel("api") * 0.016))); }
+
+  function calcDailyOperatingCost() {
+    let payroll = 74_000_000 + Object.keys(state.depts).reduce((sum, key) => sum + deptBurn(key), 0);
+    payroll *= 1 + Math.max(0, state.pressure - 55) / 260;
+    if (state.routeKey === "labor") payroll *= 0.87;
+    return Math.round(payroll);
+  }
+  function calcDailyOrders() {
+    const factory = deptOutput("factory") * 1.15;
+    const sales = deptOutput("sales") * 1.18;
+    const vendor = deptOutput("vendor") * 1.28;
+    const api = deptOutput("api") * 0.78;
+    const design = deptOutput("design") * 0.58;
+    const assembly = deptOutput("office") * 0.62;
+    const reputationMult = 0.72 + state.reputation / 180;
+    const safetyDrag = 1 - Math.max(0, 55 - state.safety) / 210;
+    const pressureDrag = 1 - Math.max(0, state.pressure - 58) / 270;
+    return Math.max(0, Math.round((factory + sales + vendor + api + design + assembly) * reputationMult * safetyDrag * pressureDrag));
+  }
+  function calcCollectionRate() {
+    let rate = 0.047 + deptLevel("finance") * 0.005 + deptLevel("sales") * 0.004 + deptLevel("api") * 0.002;
+    rate += state.routeKey === "bank" ? 0.012 : 0;
+    rate -= Math.max(0, state.legalRisk - 50) * 0.0002;
+    return clamp(rate, 0.025, 0.16);
+  }
+  function calcInterestDaily() {
+    let rate = 0.00054 - deptLevel("finance") * 0.000026;
+    if (state.routeKey === "bank") rate -= 0.00008;
+    if (state.routeKey === "labor") rate += 0.00002;
+    return Math.max(0.00018, rate) * state.debt;
+  }
+  function estimateMonthlyBurn() {
+    const grossOut = calcDailyOperatingCost() + calcInterestDaily() + state.payables * 0.038;
+    const grossIn = Math.min(state.receivables, state.receivables * calcCollectionRate()) + calcDailyOrders() * 0.08;
+    return Math.round((grossOut - grossIn) * 30);
+  }
+  function calcSurvivalDays() {
+    const burn = state.lastBurn || estimateMonthlyBurn();
+    if (burn <= 0) return 999;
+    return Math.floor(state.cash / (burn / 30));
+  }
+  function calcAssemblyRate() {
+    const skill = 0.72 + deptLevel("factory") * 0.16 + deptLevel("office") * 0.15 + deptLevel("design") * 0.07 + deptLevel("api") * 0.045;
+    const human = 0.55 + state.morale / 180 + state.safety / 220 - Math.max(0, state.pressure - 55) / 210;
+    return clamp(skill * human, 0.24, 3.2);
+  }
+  function calcDefectRate() {
+    return clamp(0.055 + Math.max(0, state.pressure - 55) / 520 + Math.max(0, 65 - state.safety) / 520 - deptLevel("design") * 0.009 - deptLevel("api") * 0.004, 0.012, 0.19);
+  }
+  function assemblyDone() { return state.assembly.frame + state.assembly.plc + state.assembly.idle; }
+
+  function dateText() {
+    const d = new Date(START_DATE.getTime());
+    d.setDate(START_DATE.getDate() + state.day - 1);
+    const h = Math.floor(state.minutes / 60);
+    const m = state.minutes % 60;
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")} ${DAY_NAMES[d.getDay()]} ${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`;
+  }
+
+  function advanceHour() {
+    if (state.flags.gameOver || state.flags.stabilized || modalOpen) return;
+    let newDay = false;
+    state.minutes += 60;
+    if (state.minutes >= 24 * 60) {
+      state.minutes = 0;
+      state.day += 1;
+      newDay = true;
+      dailyUpdate();
+    }
+    if (newDay) renderDirty = true;
+    else renderHUD();
+  }
+
+  function dailyUpdate() {
+    const startCash = state.cash;
+    const orders = Math.round(calcDailyOrders() * rand(0.84, 1.18));
+    state.receivables += orders;
+
+    let collected = Math.min(state.receivables, Math.round(state.receivables * calcCollectionRate() + deptLevel("finance") * 4_000_000));
+    if (state.routeKey === "overseas" && state.day > 28) collected += Math.min(state.receivables - collected, 20_000_000 + deptLevel("api") * 3_000_000);
+    state.receivables -= collected;
+    state.cash += collected;
+
+    const operatingCost = calcDailyOperatingCost();
+    state.cash -= operatingCost;
+
+    let payableAccrual = Math.round((orders * (0.18 + Math.max(0, 60 - state.vendorTrust) / 400)) + deptLevel("vendor") * 14_000_000);
+    payableAccrual *= (1 - Math.min(0.28, deptLevel("procurement") * 0.025));
+    payableAccrual = Math.round(payableAccrual);
+    state.payables += payableAccrual;
+
+    const apPayment = Math.min(state.payables, Math.round(state.payables * (0.032 + state.vendorTrust / 2400 + deptLevel("procurement") * 0.0025)));
+    state.payables -= apPayment;
+    state.cash -= apPayment;
+
+    const interest = Math.round(calcInterestDaily());
+    state.cash -= interest;
+
+    if (state.cash < -650_000_000) {
+      const overdraft = Math.min(650_000_000, Math.abs(state.cash) * 0.62);
+      state.debt += overdraft;
+      state.cash += overdraft;
+      state.legalRisk = clamp(state.legalRisk + 3, 0, 100);
+      addToast(`당좌 차입 ${money(overdraft)}. 숨은 쉬지만 이자는 늘었다.`);
+    }
+
+    advanceAssembly();
+    updateRiskPressure(orders, collected, operatingCost, payableAccrual, apPayment, interest);
+
+    state.lastOrders = orders;
+    state.lastCollected = collected;
+    state.lastCosts = operatingCost + apPayment + interest;
+    state.todayCashDelta = state.cash - startCash;
+    state.lastDayCash = state.cash;
+    state.lastBurn = Math.round(((operatingCost + apPayment + interest) - collected) * 30);
+    state.monthProfit += state.todayCashDelta;
+
+    for (const key of Object.keys(state.cooldowns)) state.cooldowns[key] = Math.max(0, state.cooldowns[key] - 1);
+
+    if (state.day === 3 && !state.flags.routeEventShown) {
+      state.flags.routeEventShown = true;
+      openRouteChoice();
+      return;
+    }
+    if (state.day % 7 === 0) {
+      openWeeklyReport(true);
+      return;
+    }
+
+    maybeUnlocks();
+    maybeCrisis();
+    checkEndStates();
+  }
+
+  function advanceAssembly() {
+    const a = state.assembly;
+    a.lastMade = 0;
+    a.progress += calcAssemblyRate();
+    let attempts = 0;
+    while (a.progress >= 1 && attempts < 8) {
+      a.progress -= 1;
+      attempts += 1;
+      if (Math.random() < calcDefectRate()) {
+        a.rework += 1;
+        state.pressure = clamp(state.pressure + 0.7, 0, 100);
+        if (Math.random() < 0.2) state.reputation = clamp(state.reputation - 1, 0, 100);
+        continue;
+      }
+      if (a.frame < 12) a.frame += 1;
+      else if (a.plc < 12) a.plc += 1;
+      else if (a.idle < 12) a.idle += 1;
+      a.lastMade += 1;
+      if (a.frame >= 12 && a.plc >= 12 && a.idle >= 12) {
+        completeShipment();
+        break;
+      }
+    }
+  }
+
+  function completeShipment() {
+    const value = Math.round(2_100_000_000 + deptLevel("sales") * 90_000_000 + deptLevel("design") * 70_000_000);
+    state.receivables += value;
+    state.reputation = clamp(state.reputation + 4, 0, 100);
+    state.pressure = clamp(state.pressure - 4, 0, 100);
+    state.assembly.shipments += 1;
+    state.assembly.frame = 0;
+    state.assembly.plc = 0;
+    state.assembly.idle = 0;
+    state.assembly.progress = 0;
+    flashBanner("36대 배치 출하", `SMT 스크린 프린터 36대 / AR +${money(value)}`);
+    addToast(`36대 출하 완료. 매출채권 ${money(value)} 발생.`);
+  }
+
+  function updateRiskPressure(orders, collected, operatingCost, payableAccrual, apPayment, interest) {
+    const arRatio = state.receivables / Math.max(1, orders * 12);
+    const apRatio = state.payables / Math.max(1, apPayment * 18);
+    const recovery = (state.morale > 65 ? 0.42 : 0) + (state.safety > 74 ? 0.38 : 0) + deptLevel("office") * 0.065 + deptLevel("api") * 0.05 + deptLevel("design") * 0.04;
+    state.pressure = clamp(state.pressure + (state.lastBurn > 0 ? 0.48 : -0.36) + arRatio * 0.25 + apRatio * 0.27 - recovery, 0, 100);
+    state.safety = clamp(state.safety - Math.max(0, state.pressure - 62) * 0.014 - Math.max(0, deptLevel("factory") - deptLevel("office")) * 0.045 + deptLevel("office") * 0.045 + deptLevel("procurement") * 0.018, 0, 100);
+    state.morale = clamp(state.morale - Math.max(0, state.pressure - 60) * 0.015 + deptLevel("office") * 0.05 + deptLevel("api") * 0.018 - state.deaths * 0.01, 0, 100);
+    state.reputation = clamp(state.reputation - Math.max(0, state.legalRisk - 68) * 0.01 + (orders > operatingCost ? 0.02 : -0.015), 0, 100);
+    state.vendorTrust = clamp(state.vendorTrust + deptLevel("procurement") * 0.045 - Math.max(0, state.payables / 1_000_000_000 - 2) * 0.07, 0, 100);
+    state.legalRisk = clamp(state.legalRisk + Math.max(0, state.pressure - 74) * 0.017 + Math.max(0, 52 - state.safety) * 0.022 - deptLevel("finance") * 0.018, 0, 100);
+  }
+
+  function maybeUnlocks() {
+    if (!state.depts.vendor.unlocked && (deptLevel("sales") >= 3 || state.day > 21)) {
+      state.depts.vendor.unlocked = true;
+      flashBanner("대기업 벤더락 해금", "물량과 갑질이 한 패키지로 온다.");
+      addToast("대기업 벤더락이 해금됐다. 안정과 족쇄가 같이 온다.");
+    }
+  }
+
+  function maybeCrisis() {
+    const safetyRisk = (Math.max(0, 68 - state.safety) * 0.0022 + Math.max(0, state.pressure - 66) * 0.0017 + deptLevel("factory") * 0.0022) * 0.85;
+    const legalRisk = Math.max(0, state.legalRisk - 56) * 0.0021;
+    const vendorRisk = Math.max(0, 42 - state.vendorTrust) * 0.0026;
+    const qualityRisk = Math.max(0, state.receivables / 1_000_000_000 - 3) * 0.0032 + Math.max(0, state.pressure - 74) * 0.0012 - deptLevel("design") * 0.0008;
+    if (Math.random() < safetyRisk) return industrialAccident();
+    if (Math.random() < legalRisk) return legalAudit();
+    if (Math.random() < vendorRisk) return vendorFreeze();
+    if (Math.random() < qualityRisk) return qualityRecall();
+  }
+
+  function industrialAccident() {
+    const fatal = Math.random() < clamp((62 - state.safety) / 130 + state.pressure / 420, 0.035, 0.28);
+    const cost = Math.round((fatal ? 900_000_000 : 330_000_000) + state.incidents * 110_000_000);
+    state.cash -= cost;
+    state.incidents += 1;
+    if (fatal) state.deaths += 1;
+    state.safety = clamp(state.safety - (fatal ? 14 : 7), 0, 100);
+    state.morale = clamp(state.morale - (fatal ? 17 : 7), 0, 100);
+    state.reputation = clamp(state.reputation - (fatal ? 13 : 5), 0, 100);
+    state.legalRisk = clamp(state.legalRisk + (fatal ? 18 : 8), 0, 100);
+    state.pressure = clamp(state.pressure + 7, 0, 100);
+    flashBanner(fatal ? "산재 사망 발생" : "산재 발생", `손실 -${money(cost)} / 산재 ${state.incidents}건`);
+    addToast(`${fatal ? "사망 사고" : "산재"} 처리 비용 ${money(cost)} 발생.`);
+    checkEndStates();
+  }
+  function legalAudit() {
+    const cost = Math.round(210_000_000 + state.legalRisk * 4_000_000 + rand(0, 110_000_000));
+    state.cash -= cost;
+    state.legalRisk = clamp(state.legalRisk - 5, 0, 100);
+    state.reputation = clamp(state.reputation - 5, 0, 100);
+    state.pressure = clamp(state.pressure + 4, 0, 100);
+    flashBanner("노무/세무 감사", `자료 제출과 과태료 -${money(cost)}`);
+    addToast(`감사 대응으로 ${money(cost)} 지출.`);
+  }
+  function vendorFreeze() {
+    const loss = Math.round(170_000_000 + state.payables * 0.034);
+    state.receivables = Math.max(0, state.receivables - loss * 0.45);
+    state.cash -= loss;
+    state.vendorTrust = clamp(state.vendorTrust + 6, 0, 100);
+    state.pressure = clamp(state.pressure + 5, 0, 100);
+    flashBanner("협력사 납품 중단", `라인 재개 비용 -${money(loss)}`);
+    addToast(`협력사 공급 중단. 급한 불 ${money(loss)}.`);
+  }
+  function qualityRecall() {
+    const cost = Math.round(240_000_000 + deptLevel("factory") * 42_000_000 + rand(0, 75_000_000));
+    state.cash -= cost;
+    state.receivables = Math.max(0, state.receivables - cost * 0.58);
+    state.reputation = clamp(state.reputation - 8, 0, 100);
+    state.pressure = clamp(state.pressure + 3, 0, 100);
+    flashBanner("품질 클레임", `재작업/환입 손실 -${money(cost)}`);
+    addToast(`QC가 버티지 못했다. 클레임 비용 ${money(cost)}.`);
+  }
+
+  function checkEndStates() {
+    if (state.flags.gameOver || state.flags.stabilized) return;
+    if (state.cash < -1_800_000_000 || state.legalRisk >= 100 || state.morale <= 0 || state.deaths >= 4) {
+      state.flags.gameOver = true;
+      state.paused = true;
+      openGameOver();
+      return;
+    }
+    const stable = state.day >= 120 && calcSurvivalDays() >= 120 && state.lastBurn <= 0 && deptLevel("api") >= 4 && deptLevel("finance") >= 4 && state.assembly.shipments >= 2;
+    if (stable) {
+      state.flags.stabilized = true;
+      state.paused = true;
+      openStabilized();
+    }
+  }
+
+  function buyDept(key) {
+    if (modalOpen || state.flags.gameOver || state.flags.stabilized) return;
+    const d = state.depts[key];
+    if (!d || !d.unlocked) return;
+    const cost = deptCost(key);
+    if (state.cash < cost) {
+      addToast(`${deptDefs[key].name} 투자금 부족. 필요: ${money(cost)}`);
+      return;
+    }
+    state.cash -= cost;
+    d.level += 1;
+    state.morale = clamp(state.morale + (key === "office" ? 4 : 1), 0, 100);
+    state.safety = clamp(state.safety + (key === "office" || key === "procurement" || key === "design" ? 3 : 0), 0, 100);
+    state.pressure = clamp(state.pressure - (key === "api" || key === "finance" || key === "design" ? 3 : 1), 0, 100);
+    if (key === "vendor") state.payables += 180_000_000;
+    addToast(`${deptDefs[key].name} Lv.${d.level} 투자 완료. 비용 ${money(cost)}.`);
+    renderDirty = true;
+    maybeUnlocks();
+  }
+
+  function useAction(key) {
+    if (modalOpen || state.flags.gameOver || state.flags.stabilized) return;
+    const def = actionDefs[key];
+    if (!def || state.cooldowns[key] > 0) return;
+    const ok = def.run();
+    if (ok === false) return;
+    state.cooldowns[key] = def.cdDays;
+    renderDirty = true;
+    checkEndStates();
+  }
+
+  function renderHUD() {
+    document.getElementById("clock").textContent = dateText();
+    const survival = calcSurvivalDays();
+    const pill = document.getElementById("marginPill");
+    pill.classList.toggle("bad", survival < 20);
+    pill.classList.toggle("warn", survival >= 20 && survival < 60);
+    pill.textContent = survival >= 999 ? "생존 흑자" : `생존 ${survival}일`;
+    document.getElementById("routePill").textContent = state.route;
+
+    const cashEl = document.getElementById("cashVal");
+    cashEl.textContent = money(state.cash);
+    cashEl.className = state.cash >= 0 ? "positive" : "negative";
+    document.getElementById("cashDelta").textContent = `어제 ${state.todayCashDelta >= 0 ? "+" : ""}${money(state.todayCashDelta)}`;
+    document.getElementById("arVal").textContent = money(state.receivables);
+    document.getElementById("apVal").textContent = money(state.payables);
+    document.getElementById("debtVal").textContent = money(state.debt);
+    document.getElementById("interestVal").textContent = `이자 ${money(calcInterestDaily())}/일`;
+    const burn = estimateMonthlyBurn();
+    const burnEl = document.getElementById("burnVal");
+    burnEl.textContent = money(burn);
+    burnEl.className = burn <= 0 ? "positive" : "negative";
+    const pEl = document.getElementById("pressureVal");
+    pEl.textContent = pct(state.pressure);
+    pEl.className = state.pressure > 75 ? "negative" : state.pressure > 55 ? "warning" : "violet";
+    document.getElementById("riskVal").textContent = `법무 ${Math.round(state.legalRisk)} / 사기 ${Math.round(state.morale)}`;
+
+    document.querySelectorAll(".speed-btn[data-speed]").forEach(btn => btn.classList.toggle("active", Number(btn.dataset.speed) === state.speed));
+    document.getElementById("pauseBtn").textContent = state.paused ? "▶" : "⏸";
+  }
+
+
+  function safeImg(src, cls = "", alt = "") {
+    return `<img${cls ? ` class="${cls}"` : ""} src="${src}" alt="${alt}" draggable="false" onerror="this.style.visibility='hidden';" />`;
+  }
+
+  function renderLeftRail() {
+    const nav = document.getElementById("roomNav");
+    nav.innerHTML = Object.entries(roomDefs).map(([key, room]) => `
+      <button class="room-btn ${state.currentRoom === key ? "active" : ""}" data-room="${key}">
+        <span class="nav-icon">${safeImg(room.icon)}</span>
+        <span><b>${room.short}</b><small>${room.mood}</small></span>
+      </button>
+    `).join("");
+    nav.querySelectorAll("[data-room]").forEach(btn => btn.addEventListener("click", () => {
+      state.currentRoom = btn.dataset.room;
+      lastRoomStageSig = "";
+      renderDirty = true;
+    }));
+
+    const actions = document.getElementById("actions");
+    actions.innerHTML = Object.entries(actionDefs).map(([key, def]) => {
+      const cd = state.cooldowns[key] || 0;
+      const fill = cd > 0 ? `${Math.round(cd / def.cdDays * 100)}%` : "0%";
+      return `<div class="action-card ${def.tone}" title="${escapeHtml(def.sub)}">
+        <span class="action-icon">${safeImg(def.icon)}</span>
+        <span><div class="action-name">${def.title}</div><div class="action-sub">${def.sub}</div></span>
+        <button data-action="${key}" ${cd > 0 ? "disabled" : ""}>${cd > 0 ? cd + "일" : "실행"}</button>
+        <div class="cooldown-bar"><div class="cooldown-fill" style="width:${fill}"></div></div>
+      </div>`;
+    }).join("");
+    actions.querySelectorAll("[data-action]").forEach(btn => btn.addEventListener("click", () => useAction(btn.dataset.action)));
+  }
+
+  function roomKpiInner() {
+    return `
+      <div class="floating-kpi"><label>안전</label><strong class="${state.safety < 45 ? "negative" : state.safety < 65 ? "warning" : "positive"}">${Math.round(state.safety)}</strong></div>
+      <div class="floating-kpi"><label>사기</label><strong class="${state.morale < 35 ? "negative" : state.morale < 55 ? "warning" : "positive"}">${Math.round(state.morale)}</strong></div>
+      <div class="floating-kpi"><label>평판</label><strong>${Math.round(state.reputation)}</strong></div>
+      <div class="floating-kpi"><label>산재/사망</label><strong>${state.incidents}/${state.deaths}</strong></div>`;
+  }
+
+  function renderWorkerLayer() {
+    return `<div class="worker-layer room-${state.currentRoom}" aria-hidden="true">
+      ${safeImg("assets/characters/cat.png", "worker worker-cat")}
+      ${safeImg("assets/characters/dog.png", "worker worker-dog")}
+      ${safeImg("assets/characters/owl.png", "worker worker-owl")}
+    </div>`;
+  }
+
+  function currentRoomBody() {
+    if (state.currentRoom === "field") return renderFieldStage();
+    if (state.currentRoom === "assembly") return renderAssemblyStage();
+    if (state.currentRoom === "office") return renderOfficeStage();
+    if (state.currentRoom === "design") return renderDesignStage();
+    return "";
+  }
+
+  function renderRoomStage() {
+    const room = roomDefs[state.currentRoom];
+    const root = document.getElementById("roomStage");
+    root.style.setProperty("--room-bg", `url("${room.bg}")`);
+    const body = currentRoomBody();
+
+    // The v3 flicker came from rebuilding the full <img> background every simulated hour.
+    // Keep the background node stable; update only KPI/body overlays unless the player changes rooms.
+    if (root.dataset.room !== state.currentRoom) {
+      root.dataset.room = state.currentRoom;
+      root.innerHTML = `
+        <img class="room-bg" src="${room.bg}" alt="" draggable="false" loading="eager" decoding="sync" onerror="this.style.display='none';" />
+        <div class="room-shade ${state.currentRoom === "field" ? "" : "light"}"></div>
+        <div class="room-title-card"><h1>${room.name}</h1><p>${room.desc}</p></div>
+        <div id="roomKpis" class="room-kpis">${roomKpiInner()}</div>
+        <div id="roomBody">${body}</div>
+        ${renderWorkerLayer()}
+      `;
+    } else {
+      const kpis = document.getElementById("roomKpis");
+      const bodyEl = document.getElementById("roomBody");
+      if (kpis) kpis.innerHTML = roomKpiInner();
+      if (bodyEl) bodyEl.innerHTML = body;
+    }
+  }
+
+  function renderFieldStage() {
+    const util = clamp(42 + deptLevel("factory") * 9 + state.pressure * 0.22, 0, 100);
+    const safety = state.safety;
+    const maint = clamp(38 + deptLevel("procurement") * 10 + deptLevel("design") * 5 - state.pressure * 0.18, 0, 100);
+    const backlog = Math.round((state.receivables / 100_000_000) + deptLevel("sales") * 3);
+    return `<div class="field-floor">
+      <div class="floor-card"><b>MCT 가동</b><span>절삭 물량을 밀어낸다. 가동률이 높을수록 사고 리스크도 올라간다.</span><div class="mini-progress"><i style="width:${util}%"></i></div></div>
+      <div class="floor-card"><b>CNC 가동</b><span>반복 부품 생산. 자재와 외주가 끊기면 바로 멈춘다.</span><div class="mini-progress"><i style="width:${clamp(util-8,0,100)}%"></i></div></div>
+      <div class="floor-card"><b>정비 여력</b><span>공구, 소재, 외주 관리. 오늘 아낀 돈이 내일 불량이 되기도 한다.</span><div class="mini-progress"><i style="width:${maint}%"></i></div></div>
+      <div class="floor-card"><b>작업 대기</b><span>${backlog}개 묶음 대기. 많으면 매출 후보, 너무 많으면 압박이다.</span><div class="mini-progress"><i style="width:${clamp(backlog*4,0,100)}%"></i></div></div>
+    </div>`;
+  }
+
+  function batchCells(done, previousDone) {
+    const cells = [];
+    for (let i = 1; i <= 12; i++) {
+      let cls = "";
+      if (i <= done) cls = "done";
+      else if (previousDone && i === done + 1) cls = "work";
+      cells.push(`<div class="machine-cell ${cls}">${i}</div>`);
+    }
+    return cells.join("");
+  }
+  function renderAssemblyStage() {
+    const a = state.assembly;
+    const frameWork = a.frame < 12;
+    const plcWork = a.frame >= 12 && a.plc < 12;
+    const idleWork = a.frame >= 12 && a.plc >= 12 && a.idle < 12;
+    return `<div class="assembly-board">
+      <div class="batch-column">
+        <div class="batch-head"><b>Batch 1 · 프레임</b><em>${a.frame}/12</em></div>
+        <div class="machine-grid">${batchCells(a.frame, frameWork)}</div>
+        <div class="batch-note">베이스 프레임, 외장, 기구 기준을 잡는다. 여기서 흔들리면 뒤가 전부 흔들린다.</div>
+      </div>
+      <div class="batch-column">
+        <div class="batch-head"><b>Batch 2 · 내부/PLC</b><em>${a.plc}/12</em></div>
+        <div class="machine-grid">${batchCells(a.plc, plcWork)}</div>
+        <div class="batch-note">배선, 센서, PLC, 내부 조립. 손이 많이 가고 티는 덜 난다.</div>
+      </div>
+      <div class="batch-column">
+        <div class="batch-head"><b>Batch 3 · Idle Run</b><em>${a.idle}/12</em></div>
+        <div class="machine-grid">${batchCells(a.idle, idleWork)}</div>
+        <div class="batch-note">무부하 운전, 반복 테스트, 출하 판정. 여기서 멈추면 돈은 거의 왔지만 아직 안 온 돈이다.</div>
+      </div>
+    </div>`;
+  }
+  function renderOfficeStage() {
+    return `<div class="room-hero">
+      ${safeImg(assets.facilityOffice)}
+      <h2>사무실은 숫자의 전장</h2>
+      <p>현금이 부족하면 모든 선택이 더러워진다. 이 공간은 플레이어에게 정리된 공포를 보여준다.</p>
+    </div>
+    <div class="desk-metrics">
+      ${metricStrip(assets.money, "현금", "오늘 버틸 수 있는 유일한 자원", money(state.cash), state.cash >= 0 ? "positive" : "negative")}
+      ${metricStrip(assets.apHold, "AR/AP 압박", "회수는 늦고 결제는 빠르다", `${money(state.receivables)} / ${money(state.payables)}`, "warning")}
+      ${metricStrip(assets.warning, "법무 리스크", "노무, 세무, 클레임이 한 방향으로 모인다", `${Math.round(state.legalRisk)}%`, state.legalRisk > 70 ? "negative" : "")}
+    </div>`;
+  }
+  function renderDesignStage() {
+    return `<div class="room-hero">
+      ${safeImg(assets.facilityDesign)}
+      <h2>오늘 손실로 내일의 반복을 줄인다</h2>
+      <p>설계 표준화는 당장 돈이 안 된다. 대신 불량률, 재작업, 조립 지옥을 줄인다.</p>
+    </div>
+    <div class="desk-metrics">
+      ${metricStrip(assets.lightbulb, "표준화", "도면, 공용부품, 작업 기준", `Lv.${deptLevel("design")}`, "blue")}
+      ${metricStrip(assets.gear, "예상 불량률", "압박과 안전에 따라 변동", pct(calcDefectRate()*100), calcDefectRate() > 0.10 ? "warning" : "positive")}
+      ${metricStrip(assets.wrench, "조립 속도", "설계, MES, 현장 숙련도 반영", `${calcAssemblyRate().toFixed(2)} /일`, "positive")}
+    </div>`;
+  }
+  function metricStrip(icon, title, sub, value, cls="") {
+    return `<div class="metric-strip">${safeImg(icon)}<span><b>${title}</b><span>${sub}</span></span><strong class="${cls}">${value}</strong></div>`;
+  }
+
+  function renderRoomPanel() {
+    const room = roomDefs[state.currentRoom];
+    const a = state.assembly;
+    let content = "";
+    if (state.currentRoom === "field") {
+      content = `<div class="room-status-grid">
+        <div class="tiny-stat"><label>일 수주</label><strong>${money(calcDailyOrders())}</strong></div>
+        <div class="tiny-stat"><label>안전</label><strong>${Math.round(state.safety)}</strong></div>
+        <div class="tiny-stat"><label>협력사</label><strong>${Math.round(state.vendorTrust)}</strong></div>
+        <div class="tiny-stat"><label>정비 압박</label><strong>${Math.round(clamp(state.pressure + deptLevel("factory")*4 - deptLevel("procurement")*5,0,100))}</strong></div>
+      </div>`;
+    } else if (state.currentRoom === "assembly") {
+      content = `<div class="room-status-grid">
+        <div class="tiny-stat"><label>현재 배치</label><strong>${assemblyDone()}/36</strong></div>
+        <div class="tiny-stat"><label>완료 출하</label><strong>${a.shipments}회</strong></div>
+        <div class="tiny-stat"><label>재작업</label><strong>${a.rework}</strong></div>
+        <div class="tiny-stat"><label>진행 속도</label><strong>${calcAssemblyRate().toFixed(2)}/일</strong></div>
+      </div>`;
+    } else if (state.currentRoom === "office") {
+      content = `<div class="room-status-grid">
+        <div class="tiny-stat"><label>회수율</label><strong>${pct(calcCollectionRate()*100)}</strong></div>
+        <div class="tiny-stat"><label>이자/일</label><strong>${money(calcInterestDaily())}</strong></div>
+        <div class="tiny-stat"><label>월번</label><strong>${money(estimateMonthlyBurn())}</strong></div>
+        <div class="tiny-stat"><label>법무</label><strong>${Math.round(state.legalRisk)}</strong></div>
+      </div>`;
+    } else {
+      content = `<div class="room-status-grid">
+        <div class="tiny-stat"><label>설계 Lv</label><strong>${deptLevel("design")}</strong></div>
+        <div class="tiny-stat"><label>불량률</label><strong>${pct(calcDefectRate()*100)}</strong></div>
+        <div class="tiny-stat"><label>MES Lv</label><strong>${deptLevel("api")}</strong></div>
+        <div class="tiny-stat"><label>압박 완화</label><strong>${Math.round(deptLevel("design")*4 + deptLevel("api")*3)}</strong></div>
+      </div>`;
+    }
+    document.getElementById("roomPanel").innerHTML = `<div class="panel-card"><h3>${room.name}</h3><p>${room.mood}</p>${content}</div>`;
+  }
+
+  function renderDepartments() {
+    const root = document.getElementById("departments");
+    const keys = Object.keys(deptDefs).filter(k => deptDefs[k].room === state.currentRoom);
+    root.innerHTML = keys.map(key => {
+      const def = deptDefs[key];
+      const d = state.depts[key];
+      const unlocked = d.unlocked;
+      const cost = deptCost(key);
+      const output = deptOutput(key);
+      const burn = deptBurn(key);
+      const stress = clamp(30 + def.stress * deptLevel(key) + state.pressure * 0.32 - state.morale * 0.18, 0, 100);
+      return `<div class="dept-row ${unlocked ? "" : "locked"}">
+        <div class="dept-icon">${safeImg(def.icon)}</div>
+        <div class="dept-main">
+          <div class="dept-name"><span>${def.name}</span><em>${unlocked ? `Lv.${deptLevel(key)}` : "LOCK"}</em></div>
+          <div class="dept-stats">일 산출 ${money(output)} / 비용 ${money(burn)}<br>${def.note}</div>
+          <div class="dept-meter"><i style="width:${stress}%"></i></div>
+        </div>
+        <button class="dept-buy" data-dept="${key}" ${(!unlocked || state.cash < cost) ? "disabled" : ""}>투자<span>${money(cost)}</span></button>
+      </div>`;
+    }).join("");
+    root.querySelectorAll("[data-dept]").forEach(btn => btn.addEventListener("click", () => buyDept(btn.dataset.dept)));
+  }
+
+  function renderToasts() {
+    const now = performance.now();
+    toasts = toasts.filter(t => now - t.t < 9000).slice(0, 4);
+    document.getElementById("toastLog").innerHTML = toasts.map(t => `<div class="toast">Day ${state.day}: ${escapeHtml(t.msg)}</div>`).join("");
+  }
+  function renderAll() {
+    renderHUD();
+    renderLeftRail();
+    renderRoomStage();
+    renderRoomPanel();
+    renderDepartments();
+    renderToasts();
+  }
+
+  function flashBanner(text, sub = "") {
+    bannerUntil = performance.now() + 3600;
+    const el = document.getElementById("eventBanner");
+    el.innerHTML = `${escapeHtml(text)}${sub ? `<small>${escapeHtml(sub)}</small>` : ""}`;
+    el.classList.add("show");
+  }
+  function addToast(msg) {
+    toasts.unshift({ msg, t: performance.now() });
+    toasts = toasts.slice(0, 5);
+    state.journal = state.journal || [];
+    state.journal.unshift({ day: state.day, msg });
+    state.journal = state.journal.slice(0, 45);
+    renderToasts();
+  }
+
+  function openRouteChoice() {
+    state.paused = true;
+    showModal(`<div class="modal-header"><h2>Day 3: 구조조정 방향</h2><p>회사 생존은 숫자 문제가 아니라 누구의 고통을 뒤로 미루느냐의 문제다. 하나를 고르면 그 방향의 비용도 같이 따라온다.</p></div>
+    <div class="modal-body"><div class="choice-grid">
+      <button class="choice-card" data-route="bank"><strong>은행 친화 구조조정</strong><span>금융권 신뢰를 우선한다. 이자와 회수는 나아지지만 현장 투자는 느려진다.</span><small>재무 비용 완화 / 현장 사기 둔화</small></button>
+      <button class="choice-card" data-route="labor"><strong>노무 희생</strong><span>인건비와 현장 완충을 깎는다. 당장은 숨통이 트이지만 조직이 빨리 닳는다.</span><small>고정비 감소 / 사기·법무 리스크 악화</small></button>
+      <button class="choice-card" data-route="vendor"><strong>벤더락 수용</strong><span>대기업 물량에 붙는다. 매출은 커지지만 미지급금과 갑질이 구조가 된다.</span><small>수주 증가 / AP 압박 증가</small></button>
+      <button class="choice-card" data-route="overseas"><strong>해외 탈출 준비</strong><span>국내 압박을 버티며 해외 회수 라인을 만든다. 초반은 불리하지만 후반 회수력이 오른다.</span><small>초반 압박 / 후반 회수 보너스</small></button>
+    </div></div>`);
+    document.querySelectorAll("[data-route]").forEach(btn => btn.addEventListener("click", () => chooseRoute(btn.dataset.route)));
+  }
+  function chooseRoute(route) {
+    const map = {
+      bank: ["은행 친화", () => { state.debt *= 0.96; state.reputation += 3; state.morale -= 3; }],
+      labor: ["노무 희생", () => { state.cash += 350_000_000; state.morale -= 10; state.legalRisk += 8; }],
+      vendor: ["벤더락", () => { state.depts.vendor.unlocked = true; state.receivables += 600_000_000; state.payables += 380_000_000; }],
+      overseas: ["해외 탈출", () => { state.cash -= 280_000_000; state.reputation += 4; state.pressure += 4; }]
+    };
+    state.routeKey = route;
+    state.route = map[route][0];
+    map[route][1]();
+    closeModal();
+    state.paused = false;
+    addToast(`${state.route} 루트 선택. 이제 다른 종류의 대가를 낸다.`);
+    renderDirty = true;
+  }
+
+  function openWeeklyReport(auto) {
+    state.paused = true;
+    const survival = calcSurvivalDays();
+    const recent = (state.journal || []).slice(0, 5).map(j => `<div>Day ${j.day}: ${escapeHtml(j.msg)}</div>`).join("") || `<div>기록 없음</div>`;
+    showModal(`<div class="modal-header"><h2>주간 대책회의</h2><p>숫자는 감정을 배려하지 않는다. 그래도 플레이어는 이 표를 보고 다음 주에 누구를 덜 망가뜨릴지 정해야 한다.</p></div>
+      <div class="modal-body">
+        <div class="mini-table">
+          <div class="mini-cell"><label>현금</label><strong>${money(state.cash)}</strong></div>
+          <div class="mini-cell"><label>생존 여력</label><strong>${survival >= 999 ? "흑자" : survival + "일"}</strong></div>
+          <div class="mini-cell"><label>36대 진행</label><strong>${assemblyDone()}/36</strong></div>
+          <div class="mini-cell"><label>월 번</label><strong>${money(estimateMonthlyBurn())}</strong></div>
+        </div>
+        <div class="mini-table">
+          <div class="mini-cell"><label>AR</label><strong>${money(state.receivables)}</strong></div>
+          <div class="mini-cell"><label>AP</label><strong>${money(state.payables)}</strong></div>
+          <div class="mini-cell"><label>법무</label><strong>${Math.round(state.legalRisk)}</strong></div>
+          <div class="mini-cell"><label>사기</label><strong>${Math.round(state.morale)}</strong></div>
+        </div>
+        <div class="journal">${recent}</div>
+        <div class="modal-actions"><button id="continueBtn">계속 운영</button></div>
+      </div>`);
+    document.getElementById("continueBtn").addEventListener("click", () => { closeModal(); state.paused = false; });
+  }
+  function openGameOver() {
+    showModal(`<div class="modal-header"><h2>파산 / 붕괴</h2><p>회사는 숫자에서 먼저 무너지고, 그 다음 사람들의 표정에서 무너진다.</p></div>
+      <div class="modal-body">
+        <div class="mini-table">
+          <div class="mini-cell"><label>생존일</label><strong>${state.day}일</strong></div>
+          <div class="mini-cell"><label>현금</label><strong>${money(state.cash)}</strong></div>
+          <div class="mini-cell"><label>출하</label><strong>${state.assembly.shipments}회</strong></div>
+          <div class="mini-cell"><label>산재/사망</label><strong>${state.incidents}/${state.deaths}</strong></div>
+        </div>
+        <div class="modal-actions"><button id="newRunBtn">새 런</button></div>
+      </div>`);
+    document.getElementById("newRunBtn").addEventListener("click", () => resetGame(true));
+  }
+  function openStabilized() {
+    showModal(`<div class="modal-header"><h2>안정화 성공</h2><p>완벽한 승리는 아니다. 하지만 시스템이 사람 하나의 신경계에만 의존하지 않게 되었다.</p></div>
+      <div class="modal-body"><div class="mini-table">
+        <div class="mini-cell"><label>생존일</label><strong>${state.day}일</strong></div>
+        <div class="mini-cell"><label>출하</label><strong>${state.assembly.shipments}회</strong></div>
+        <div class="mini-cell"><label>현금</label><strong>${money(state.cash)}</strong></div>
+        <div class="mini-cell"><label>월 번</label><strong>${money(estimateMonthlyBurn())}</strong></div>
+      </div><div class="modal-actions"><button id="continueBtn">관찰 계속</button><button id="newRunBtn">새 런</button></div></div>`);
+    document.getElementById("continueBtn").addEventListener("click", () => closeModal());
+    document.getElementById("newRunBtn").addEventListener("click", () => resetGame(true));
+  }
+  function showModal(html) {
+    modalOpen = true;
+    document.getElementById("modal").innerHTML = html;
+    document.getElementById("modalBackdrop").classList.add("show");
+  }
+  function closeModal() {
+    modalOpen = false;
+    document.getElementById("modalBackdrop").classList.remove("show");
+    renderDirty = true;
+  }
+
+  function saveGame(toast = true) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      if (toast) addToast("저장 완료.");
+    } catch (e) {
+      if (toast) addToast("저장 실패. 브라우저 저장공간 확인 필요.");
+    }
+  }
+  function loadGame() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || parsed.version !== 41) return null;
+      for (const key of Object.keys(deptDefs)) {
+        if (!parsed.depts[key]) parsed.depts[key] = { level: key === "vendor" ? 0 : 1, unlocked: key !== "vendor", boost: 0 };
+      }
+      for (const key of Object.keys(actionDefs)) {
+        if (parsed.cooldowns[key] == null) parsed.cooldowns[key] = 0;
+      }
+      if (!parsed.assembly) parsed.assembly = { frame: 0, plc: 0, idle: 0, progress: 0, shipments: 0, rework: 0, lastMade: 0 };
+      if (!parsed.currentRoom) parsed.currentRoom = "field";
+      return parsed;
+    } catch (e) { return null; }
+  }
+  function resetGame(skipConfirm = false) {
+    if (!skipConfirm && !confirm("현재 런을 버리고 새로 시작할까?")) return;
+    localStorage.removeItem(STORAGE_KEY);
+    state = createDefaultState();
+    lastRoomStageSig = "";
+    hourAccumulator = 0;
+    toasts = [];
+    closeModal();
+    addToast("새 런 시작. 이번에는 공간을 방문하면서 버틴다.");
+    renderDirty = true;
+    showIntroIfNew();
+  }
+
+  function wireControls() {
+    document.querySelectorAll(".speed-btn[data-speed]").forEach(btn => btn.addEventListener("click", () => {
+      state.speed = Number(btn.dataset.speed);
+      state.paused = false;
+      renderDirty = true;
+    }));
+    document.getElementById("pauseBtn").addEventListener("click", () => { state.paused = !state.paused; renderDirty = true; });
+    document.getElementById("saveBtn").addEventListener("click", () => saveGame(true));
+    document.getElementById("resetBtn").addEventListener("click", () => resetGame(false));
+    window.addEventListener("keydown", e => {
+      if (e.target && ["INPUT", "TEXTAREA", "SELECT"].includes(e.target.tagName)) return;
+      if (e.code === "Space") { e.preventDefault(); state.paused = !state.paused; renderDirty = true; }
+      if (e.key === "1") { state.speed = 1; state.paused = false; renderDirty = true; }
+      if (e.key === "2") { state.speed = 4; state.paused = false; renderDirty = true; }
+      if (e.key === "3") { state.speed = 8; state.paused = false; renderDirty = true; }
+      if (e.key.toLowerCase() === "s") saveGame(true);
+    });
+  }
+
+  function showIntroIfNew() {
+    if (state.started) return;
+    state.started = true;
+    state.paused = true;
+    showModal(`<div class="modal-header"><h2>SJ Applied Tech v4</h2><p>한 화면에 모든 회사를 욱여넣지 않는다. 이제 현장, 조립실, 사무실, 설계실을 방문하며 숫자와 공간을 같이 본다.</p></div>
+      <div class="modal-body">
+        <div class="mini-table">
+          <div class="mini-cell"><label>목표</label><strong>120일 생존</strong></div>
+          <div class="mini-cell"><label>생산</label><strong>36대 배치</strong></div>
+          <div class="mini-cell"><label>구조</label><strong>방문형 화면</strong></div>
+          <div class="mini-cell"><label>핵심</label><strong>덜 나쁜 선택</strong></div>
+        </div>
+        <p style="margin:0;color:#61727d;font-size:12px;line-height:1.6;">좌측 상단은 공간 이동, 좌측 하단은 생존 액션, 우측은 현재 공간의 투자다. 조립실에서는 프레임 12대, 내부/PLC 12대, Idle Run 12대를 밀어 출하한다.</p>
+        <div class="modal-actions"><button id="startBtn">시작</button></div>
+      </div>`);
+    document.getElementById("startBtn").addEventListener("click", () => {
+      closeModal();
+      state.paused = false;
+      addToast("운영 시작. 오늘의 선택은 내일의 흉터가 된다.");
+    });
+  }
+
+  function gameLoop(now) {
+    const dt = Math.min(100, now - lastFrame);
+    lastFrame = now;
+    if (!state.paused && !modalOpen) {
+      hourAccumulator += dt * state.speed;
+      while (hourAccumulator >= MS_PER_HOUR) {
+        hourAccumulator -= MS_PER_HOUR;
+        advanceHour();
+      }
+      autosaveTimer += dt;
+      if (autosaveTimer > 5000) { autosaveTimer = 0; saveGame(false); }
+    }
+    if (bannerUntil && now > bannerUntil) {
+      bannerUntil = 0;
+      document.getElementById("eventBanner").classList.remove("show");
+    }
+    renderToasts();
+    if (renderDirty) { renderAll(); renderDirty = false; }
+    requestAnimationFrame(gameLoop);
+  }
+
+
+  function preloadAssets() {
+    const urls = new Set(Object.values(assets));
+    urls.add("assets/rooms/assembly.png");
+    urls.add("assets/rooms/office.png");
+    urls.add("assets/rooms/design.png");
+    urls.add("assets/characters/cat.png");
+    urls.add("assets/characters/dog.png");
+    urls.add("assets/characters/owl.png");
+    urls.forEach(src => { const img = new Image(); img.src = src; });
+  }
+
+  function init() {
+    preloadImages();
+    state = loadGame() || createDefaultState();
+    wireControls();
+    renderAll();
+    showIntroIfNew();
+    requestAnimationFrame(gameLoop);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
