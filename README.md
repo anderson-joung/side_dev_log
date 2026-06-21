@@ -1,4 +1,4 @@
-# SJ Applied Tech Tycoon
+# 이번 달까지만 버텨주세요
 
 Korean manufacturing survival tycoon prototype.
 
