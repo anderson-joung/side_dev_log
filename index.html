@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>이번 달까지만 버텨주세요 | Please Let Us Survive This Month</title>
+  <title>이번 달까지만 버텨주세요 / Please Let Us Survive This Month</title>
   <style>
     :root {
       --bg: #eef3f7;
@@ -1438,24 +1438,291 @@
     .room-status-grid.office-staff .tiny-stat strong { white-space: nowrap !important; font-size: 14px !important; }
 
   
-    /* v4.4.12: production flow stays on one readable line */
-    .modal-header h2 small { display:block; margin-top:6px; font-size:13px; color:var(--muted); letter-spacing:0; }
-    .intro-copy { margin: 0 0 7px !important; color: var(--muted); font-size: 12px; line-height: 1.52; }
-    .intro-copy b { color: var(--ink); }
-    .assembly-flow {
-      grid-template-columns: repeat(6, minmax(112px, 1fr)) !important;
-      max-width: none !important;
-      left: 16px !important;
-      right: 16px !important;
-      bottom: 18px !important;
-      gap: 8px !important;
-    }
-    .flow-card { min-height: 66px !important; padding: 8px 10px !important; text-align: center !important; }
-    .flow-card b { font-size: 13px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
-    .flow-card strong { font-size: 15px !important; }
+    /* v4.4.14: order balance and asset reconnect */
+    .assembly-flow.one-line { grid-template-columns: repeat(6, minmax(108px, 1fr)) !important; max-width: none !important; left: 18px !important; right: 18px !important; gap: 7px !important; }
+    .assembly-flow.one-line .flow-card { min-height: 62px !important; padding: 8px 9px !important; }
+    .assembly-flow.one-line .flow-card b { font-size: 13px !important; white-space: nowrap !important; }
+    .assembly-flow.one-line .flow-card strong { font-size: 15px !important; }
+    .statement-grid { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 8px; margin: 10px 0 12px; }
+    .statement-box { border:1px solid var(--line); border-radius:16px; background:#f8fbfd; padding:10px; }
+    .statement-box h4 { margin:0 0 7px; font-size:12px; }
+    .statement-box p { display:flex; justify-content:space-between; gap:8px; margin:5px 0; font-size:11px; color:var(--muted); }
+    .statement-box b { color:var(--ink); font-variant-numeric: tabular-nums; }
+    @media (max-width: 780px) { .assembly-flow.one-line { grid-template-columns: repeat(2, minmax(0,1fr)) !important; } .statement-grid { grid-template-columns: 1fr; } }
+
+  
+    /* v4.4.14 label overflow fix */
+    .brand-title, .brand-title strong, .brand-title span, .route-pill, .room-title-card h1, .room-title-card p, .room-btn b { min-width: 0; }
+    .brand-title strong, .brand-title span, .route-pill, .room-title-card h1, .room-title-card p, .room-btn b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .route-pill { max-width: 150px !important; }
+    .room-title-card { max-width: min(360px, calc(100% - 36px)) !important; }
+    .room-title-card h1 { max-width: 100%; }
+    @media (max-width: 780px) { .route-pill { max-width: 118px !important; } .room-title-card { max-width: calc(100% - 24px) !important; } }
+
+
+    /* v4.4.18: phone layout + SME ERP realism */
     @media (max-width: 780px) {
-      .assembly-flow { display:flex !important; grid-template-columns:none !important; overflow-x:auto !important; overflow-y:hidden !important; flex-wrap:nowrap !important; }
-      .flow-card { min-width: 116px !important; }
+      html, body { width: 100% !important; height: auto !important; overflow-x: hidden !important; overflow-y: auto !important; }
+      #app { width: 100% !important; height: auto !important; min-height: 100svh !important; display: block !important; overflow: visible !important; }
+      .topbar {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 80 !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+        padding: 6px !important;
+      }
+      .brand { display: flex !important; min-width: 0 !important; gap: 8px !important; }
+      .brand-badge { width: 32px !important; height: 32px !important; min-width: 32px !important; border-radius: 12px !important; }
+      .brand-badge img { width: 26px !important; height: 26px !important; }
+      .brand-title { min-width: 0 !important; }
+      .brand-title strong { font-size: 13px !important; line-height: 1.05 !important; }
+      .brand-title span { font-size: 9px !important; line-height: 1.15 !important; }
+      .top-center { display: grid !important; grid-template-rows: auto auto !important; gap: 5px !important; }
+      .status-row { display: grid !important; grid-template-columns: 1fr auto auto !important; gap: 4px !important; justify-content: initial !important; overflow: hidden !important; }
+      .clock, .survival-pill, .route-pill {
+        height: 28px !important;
+        min-width: 0 !important;
+        padding: 0 6px !important;
+        border-radius: 999px !important;
+        font-size: 10px !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+      }
+      .route-pill { max-width: 88px !important; }
+      .resource-strip { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 4px !important; }
+      .resource-card { min-height: 46px !important; padding: 5px 6px !important; border-radius: 10px !important; text-align: center !important; }
+      .resource-card label { font-size: 9px !important; text-align: center !important; }
+      .resource-card strong { font-size: 13px !important; line-height: 1.05 !important; text-align: center !important; margin-top: 3px !important; }
+      .resource-card small { display: none !important; }
+      .controls {
+        position: static !important;
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        grid-template-rows: 30px 30px !important;
+        gap: 4px !important;
+        width: 100% !important;
+        overflow: visible !important;
+        padding: 0 !important;
+      }
+      .controls > button { height: 30px !important; min-width: 0 !important; width: 100% !important; padding: 0 4px !important; border-radius: 10px !important; font-size: 10px !important; white-space: nowrap !important; }
+      .controls > button:nth-child(1) { grid-column: 1; grid-row: 1; }
+      .controls > button:nth-child(2) { grid-column: 2; grid-row: 1; }
+      .controls > button:nth-child(3) { grid-column: 3; grid-row: 1; }
+      .controls > button:nth-child(4) { grid-column: 4; grid-row: 1; }
+      .controls > button:nth-child(5) { grid-column: 1 / span 3; grid-row: 2; }
+      .controls > button:nth-child(6) { grid-column: 4; grid-row: 2; }
+      .game-shell { display: flex !important; flex-direction: column !important; height: auto !important; min-height: 0 !important; padding: 6px !important; gap: 6px !important; overflow: visible !important; }
+      .stage-panel { order: 1 !important; height: 52svh !important; min-height: 390px !important; border-radius: 16px !important; }
+      .left-rail { order: 2 !important; position: static !important; display: block !important; height: auto !important; max-height: none !important; overflow: visible !important; border-radius: 16px !important; padding: 6px !important; }
+      .right-rail, .right-rail.status-rail { order: 3 !important; position: static !important; display: block !important; height: auto !important; max-height: none !important; overflow: visible !important; border-radius: 16px !important; padding: 6px !important; }
+      .rail-section + .rail-section { margin-top: 7px !important; padding-top: 7px !important; }
+      .rail-title { margin: 0 2px 6px !important; }
+      .room-nav { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 4px !important; overflow: visible !important; }
+      .room-btn { min-height: 54px !important; grid-template-columns: 1fr !important; justify-items: center !important; text-align: center !important; padding: 5px !important; border-radius: 12px !important; }
+      .nav-icon { width: 30px !important; height: 30px !important; border-radius: 10px !important; }
+      .nav-icon img { width: 26px !important; height: 26px !important; }
+      .room-btn b { font-size: 10px !important; max-width: 100% !important; }
+      .room-btn small { display: none !important; }
+      .action-list { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 5px !important; overflow: visible !important; }
+      .action-card { min-height: 56px !important; grid-template-columns: 30px minmax(0, 1fr) !important; padding: 5px !important; border-radius: 12px !important; }
+      .action-icon { width: 30px !important; height: 30px !important; border-radius: 10px !important; }
+      .action-icon img { width: 26px !important; height: 26px !important; }
+      .action-name { font-size: 10px !important; line-height: 1.15 !important; }
+      .action-sub { display: none !important; }
+      .action-card button { display: block !important; position: absolute !important; right: 5px !important; bottom: 5px !important; width: 38px !important; height: 24px !important; border-radius: 9px !important; font-size: 9px !important; }
+      .room-title-card { left: 8px !important; right: 8px !important; top: 8px !important; max-width: none !important; padding: 8px 10px !important; border-radius: 14px !important; }
+      .room-title-card h1 { font-size: 16px !important; }
+      .room-title-card p { display: none !important; }
+      .room-kpis { display: none !important; }
+      .field-floor { display: grid !important; left: 8px !important; right: 8px !important; bottom: 8px !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 6px !important; }
+      .floor-card { min-height: 58px !important; padding: 8px !important; border-radius: 14px !important; }
+      .floor-card b { font-size: 10px !important; }
+      .floor-card span { display: none !important; }
+      .mini-progress { margin-top: 7px !important; height: 6px !important; }
+      .assembly-flow.one-line { position: absolute !important; left: 8px !important; right: 8px !important; bottom: 8px !important; top: auto !important; display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 5px !important; max-width: none !important; }
+      .assembly-flow.one-line .flow-card { min-height: 50px !important; padding: 7px !important; border-radius: 13px !important; }
+      .assembly-flow.one-line .flow-card b { font-size: 10px !important; }
+      .assembly-flow.one-line .flow-card strong { font-size: 13px !important; }
+      .desk-metrics { left: 8px !important; right: 8px !important; bottom: 8px !important; top: auto !important; width: auto !important; max-height: calc(100% - 92px) !important; overflow-y: auto !important; gap: 5px !important; }
+      .metric-strip { grid-template-columns: 34px minmax(0, 1fr) auto !important; padding: 7px !important; border-radius: 14px !important; gap: 7px !important; }
+      .metric-strip img { width: 30px !important; height: 30px !important; }
+      .metric-strip b { font-size: 10px !important; }
+      .metric-strip span span { display: none !important; }
+      .metric-strip strong { font-size: 11px !important; }
+      .room-status-grid, .room-status-grid.office-staff { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 5px !important; }
+      .tiny-stat { padding: 7px !important; border-radius: 12px !important; }
+      .tiny-stat label { font-size: 9px !important; }
+      .tiny-stat strong { font-size: 11px !important; white-space: nowrap !important; }
+      .worker { width: clamp(56px, 15vw, 92px) !important; opacity: 0.9 !important; }
+      .modal-backdrop { align-items: flex-start !important; padding: 8px !important; overflow-y: auto !important; }
+      .modal { width: 100% !important; max-height: calc(100svh - 16px) !important; border-radius: 18px !important; }
+      .modal-header { padding: 12px 13px 10px !important; }
+      .modal-header h2 { font-size: 17px !important; }
+      .modal-header p { font-size: 11px !important; }
+      .modal-body { padding: 10px 12px 12px !important; }
+      .mini-table { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 6px !important; }
+      .mini-cell { padding: 8px !important; border-radius: 13px !important; }
+      .mini-cell strong { font-size: 12px !important; }
+      .choice-grid, .statement-grid, .slot-grid { grid-template-columns: 1fr !important; }
+      .modal-actions { justify-content: stretch !important; }
+      .modal-actions button { flex: 1 !important; }
+    }
+    @media (max-width: 420px) {
+      .stage-panel { min-height: 360px !important; }
+      .resource-card strong { font-size: 12px !important; }
+      .assembly-flow.one-line .flow-card b { font-size: 9px !important; }
+    }
+
+  
+
+    /* v4.4.18: phone modal/event visibility fix */
+    @media (max-width: 780px) {
+      html, body {
+        height: auto !important;
+        min-height: 100svh !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        overscroll-behavior: contain !important;
+      }
+      .topbar {
+        position: static !important;
+        top: auto !important;
+        z-index: 20 !important;
+      }
+      .modal-backdrop {
+        position: fixed !important;
+        inset: 0 !important;
+        z-index: 3000 !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+        padding: 10px !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+      .modal {
+        width: min(100%, 560px) !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin: 8px 0 28px !important;
+        border-radius: 18px !important;
+      }
+      .modal-header {
+        padding: 12px 13px 10px !important;
+      }
+      .modal-header h2 {
+        font-size: 17px !important;
+        line-height: 1.22 !important;
+        word-break: keep-all !important;
+      }
+      .modal-header p {
+        font-size: 11px !important;
+        line-height: 1.45 !important;
+        white-space: normal !important;
+        word-break: keep-all !important;
+      }
+      .modal-body {
+        padding: 10px 12px 12px !important;
+      }
+      .choice-grid {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+      }
+      .choice-card {
+        min-height: 0 !important;
+        padding: 10px 11px !important;
+        border-radius: 15px !important;
+      }
+      .choice-card strong {
+        font-size: 13px !important;
+        margin-bottom: 4px !important;
+        white-space: normal !important;
+      }
+      .choice-card span,
+      .choice-card small {
+        font-size: 11px !important;
+        line-height: 1.35 !important;
+        white-space: normal !important;
+        word-break: keep-all !important;
+      }
+      .mini-table,
+      .statement-grid,
+      .slot-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .modal-actions {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 7px !important;
+      }
+      .modal-actions button {
+        width: 100% !important;
+        min-height: 38px !important;
+      }
+      .event-banner,
+      .event-banner.with-actor {
+        position: fixed !important;
+        left: 50% !important;
+        top: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        z-index: 3200 !important;
+        width: calc(100vw - 20px) !important;
+        max-width: 520px !important;
+        max-height: calc(100svh - 24px) !important;
+        overflow-y: auto !important;
+        transform: translate(-50%, -50%) !important;
+        white-space: normal !important;
+        text-align: left !important;
+      }
+      .event-banner.show,
+      .event-banner.with-actor.show {
+        transform: translate(-50%, -50%) !important;
+      }
+      .event-banner.with-actor {
+        display: grid !important;
+        grid-template-columns: 64px minmax(0, 1fr) !important;
+        grid-template-rows: auto auto !important;
+        gap: 9px !important;
+        padding: 12px !important;
+        border-radius: 18px !important;
+      }
+      .event-face {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        width: 60px !important;
+        height: 60px !important;
+        object-fit: contain !important;
+      }
+      .event-copy {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        min-width: 0 !important;
+      }
+      .event-copy b {
+        font-size: 14px !important;
+        line-height: 1.25 !important;
+        white-space: normal !important;
+        word-break: keep-all !important;
+      }
+      .event-copy small {
+        display: block !important;
+        margin-top: 5px !important;
+        font-size: 12px !important;
+        line-height: 1.45 !important;
+        white-space: normal !important;
+        word-break: keep-all !important;
+      }
+      .event-ack {
+        grid-column: 1 / -1 !important;
+        grid-row: 2 !important;
+        width: 100% !important;
+        height: 38px !important;
+        min-width: 0 !important;
+      }
     }
 
   </style>
@@ -1467,7 +1734,7 @@
         <div class="brand-badge"><img src="assets/icon_visit_workshop.png" alt="" /></div>
         <div class="brand-title">
           <strong id="companyBrand">이번 달까지만 버텨주세요</strong>
-          <span>Please Let Us Survive This Month</span>
+          <span>Please Let Us Survive This Month v5.0</span>
         </div>
       </div>
 
@@ -1531,7 +1798,7 @@
 (() => {
   "use strict";
 
-  const STORAGE_KEY = "until_month_end_v4412";
+  const STORAGE_KEY = "please_survive_this_month_v4416_mobile_erp";
   const START_DATE = new Date(2026, 4, 25, 9, 0, 0, 0);
   const DAY_NAMES = ["일", "월", "화", "수", "목", "금", "토"];
   const MS_PER_HOUR = 260;
@@ -1667,7 +1934,7 @@
     assembly: {
       name: "조립실", short: "조립실", icon: assets.facilityAssembly,
       bg: assets.assemblyBg,
-      desc: "수주→프레임→아쎄이→PLC/전장→QC→Idle→출고 순서로 넘어간다.",
+      desc: "수주→프레임→아쎄이→PLC/전장→QC→Idle/출고 순서로 넘어간다.",
       mood: "보이는 성취와 지연의 압박"
     },
     office: {
@@ -1730,19 +1997,19 @@
   const actionDefs = {
     salesPush: {
       title: "초과 생산", icon: assets.deadline, tone: "hot", cdDays: 3,
-      sub: "수주를 프레임으로 당긴다",
+      sub: "수주가 많아 납기를 맞춘다",
       run: () => {
-        const a = state.assembly;
-        const units = Math.floor(rand(2, 5));
-        const pulled = Math.min(units, Math.max(0, a.orderBacklog || 0));
-        if (pulled > 0) a.orderBacklog -= pulled;
-        a.frame = (a.frame || 0) + units;
-        a.rushDays = Math.max(a.rushDays || 0, 7);
-        state.flags.orderMishap = true;
-        state.morale = clamp(state.morale - 3, 0, 100);
-        state.pressure = clamp(state.pressure + 5, 0, 100);
-        addToast(`초과 생산: 프레임 ${units}대 선투입. 수주가 늘어난 게 아니라 공정을 당긴 것이다.`);
-        flashBanner("초과 생산", `프레임 +${units}대 / 강제잔업`);
+        const units = Math.floor(rand(2, 5)) + (deptLevel("sales") >= 3 ? 1 : 0);
+        const deposit = Math.round(equipmentUnitPrice() * units * 0.10);
+        state.receivables += deposit;
+        state.assembly.orderBacklog += units;
+        state.assembly.rushDays = Math.max(state.assembly.rushDays || 0, (state.assembly.orderBacklog > assemblyMonthlyCap() ? 10 : 5));
+        state.flags.pricePressure = (state.flags.pricePressure || 0) + 0.25;
+        state.morale = clamp(state.morale - 4, 0, 100);
+        state.safety = clamp(state.safety - 4, 0, 100);
+        state.pressure = clamp(state.pressure + 6, 0, 100);
+        addToast(`초과 생산 ${units}대. 납기를 맞추려면 잔업과 외주비가 붙는다.`);
+        flashBanner("초과 생산", `고객 신용을 지키려고 대기 +${units}대를 밀어 넣었다.`);
       }
     },
     cashPlan: {
@@ -1782,28 +2049,18 @@
 
 
 
-  function pickCsTrip() {
-    const trips = [
-      { country: "베트남", cost: Math.round(rand(1_600_000, 3_200_000)) },
-      { country: "독일", cost: Math.round(rand(5_000_000, 8_500_000)) },
-      { country: "브라질", cost: Math.round(rand(6_800_000, 9_800_000)) },
-      { country: "멕시코", cost: Math.round(rand(4_800_000, 7_500_000)) }
-    ];
-    return trips[Math.floor(Math.random() * trips.length)];
-  }
-
   const badLuckDefs = [
     { title:"라벨 오타", msg:"라벨 한 줄이 틀려 출고 확인이 밀렸다. 비용은 없지만 거래처 신뢰가 깎였다.", bucket:"admin", cost:()=>0, pressure:1, reputation:-2, delay:1 },
     { title:"한달 전 세금계산서 수정", msg:"한달 전 계산서 수정 요청이 왔다. 돈은 안 나갔지만 신뢰가 깎였다.", bucket:"admin", cost:()=>0, pressure:1, reputation:-2, vendor:-1 },
-    { title:"도금/분체 무상 변경 요구", msg:"이미 끝난 외주를 고객사가 공짜로 바꿔달라고 했다.", bucket:"vendors", cost:()=>rand(3_000_000,10_000_000), pressure:4, rework:1, overtime:21 },
-    { title:"윈도우 업데이트", msg:"6개월 만에 또 업데이트가 꼬였다. 프로그래밍 PC와 장비 통신이 안 맞는다.", bucket:"admin", cost:()=>rand(4_000_000,9_000_000), pressure:4, rework:1, overtime:24, semiAnnual:"windowsUpdate" },
+    { title:"도금/분체 무상 변경 요구", msg:"이미 끝난 외주를 고객사가 공짜로 바꿔달라고 했다.", bucket:"vendors", cost:()=>rand(2_000_000,9_800_000), pressure:4, rework:1, overtime:21 },
+    { title:"윈도우 업데이트", msg:"6개월 만에 또 업데이트가 꼬였다. 프로그래밍 PC와 장비 통신이 안 맞는다.", bucket:"admin", cost:()=>rand(3_000_000,9_800_000), pressure:4, rework:1, overtime:24, semiAnnual:"windowsUpdate" },
     { title:"야근 간식비 200만원 초과", msg:"두세 달에 한 번씩 야근 간식비가 튄다.", bucket:"snacks", cost:()=>rand(2_000_000,4_800_000), pressure:1, morale:1, scheduled:"snack" },
-    { title:"외주 담당자 부고", msg:"외주 담당자 고령화로 인한 부고. 비용은 없지만 납기에 차질이 생겼다.", bucket:"vendors", cost:()=>0, pressure:4, vendor:-5, delay:3 },
+    { title:"외주 담당자 고령화로 인한 부고", msg:"비용은 없지만 인수인계가 비어 납기에 차질이 생겼다.", bucket:"vendors", cost:()=>0, pressure:4, vendor:-5, backlog:1, delay:3 },
     { title:"영업 스펙 찐빠", msg:"영업 스펙이 틀렸다. 무상보증이라 CS가 해외 출장을 다녀와야 한다.", bucket:"admin", cost:()=>{ const t = pickCsTrip(); state.flags.lastTrip = t; return t.cost; }, pressure:5, legal:1, overtime:21, trip:true },
     { title:"장비 항공운송", msg:"해상 일정이 터져 장비를 비행기로 보내야 한다.", bucket:"vendors", cost:()=>80_000_000, pressure:6, vendor:-3, ap:20_000_000, overtime:24, yearly:"airFreight" },
-    { title:"현장 버튼맨", msg:"핸드폰 보다가 가공품 실수가 났다. 큰 사고는 아니지만 다시 손봐야 한다.", bucket:"admin", cost:()=>rand(700_000,3_000_000), pressure:3, delay:1, safety:-1, cs:1 },
-    { title:"공구/소재 아껴쓰기 한계", msg:"잘라 쓰던 공구와 소재가 결국 불량으로 돌아왔다.", bucket:"vendors", cost:()=>rand(3_000_000,9_500_000), pressure:3, rework:1 },
-    { title:"CS 나사 조임 불량", msg:"조립실에서 대충 넘어간 나사 조임 불량을 CS가 고객사에서 커버쳤다.", bucket:"admin", cost:()=>rand(3_000_000,10_000_000), pressure:4, rework:1, cs:1 },
+    { title:"현장 버튼맨", msg:"핸드폰 보다가 가공품 실수가 났다. 큰 사고는 아니지만 다시 손봐야 한다.", bucket:"admin", cost:()=>rand(500_000,2_800_000), pressure:3, backlog:1, safety:-1, cs:1 },
+    { title:"공구/소재 아껴쓰기 한계", msg:"잘라 쓰던 공구와 소재가 결국 불량으로 돌아왔다.", bucket:"vendors", cost:()=>rand(2_000_000,8_500_000), pressure:3, rework:1 },
+    { title:"CS 나사 조임 불량", msg:"조립실에서 대충 넘어간 나사 조임 불량을 CS가 고객사에서 커버쳤다.", bucket:"admin", cost:()=>rand(2_000_000,9_500_000), pressure:4, rework:1, cs:1 },
     { title:"중국산 1/3 가격 등장", msg:"중국에서 1/3 가격으로 비슷한 장비가 나왔다. 이번 비딩은 포기했다.", bucket:"admin", cost:()=>0, pressure:5, yearly:"chinaCopy", orderLoss:1, reputation:-1 }
   ];
 
@@ -1823,7 +2080,7 @@
       depts[key] = { level: key === "vendor" ? 0 : 1, unlocked: key !== "vendor", boost: 0 };
     }
     return {
-      version: 52,
+      version: 56,
       started: false,
       currentRoom: "field",
       route: "이번 달 생존",
@@ -1837,7 +2094,7 @@
       receivables: 1_480_000_000,
       payables: 1_090_000_000,
       debt: 500_000_000,
-      debtBreakdown: { collateral: 300_000_000, creditGuarantee: 100_000_000, kiboGuarantee: 100_000_000 },
+      debtBreakdown: { collateral: 300_000_000, creditGuarantee: 100_000_000, techGuarantee: 100_000_000 },
       morale: 58,
       safety: 66,
       reputation: 57,
@@ -1853,7 +2110,7 @@
       lastOrders: 0,
       lastCollected: 0,
       lastCosts: 0,
-      assembly: { orderBacklog: 12, frame: 12, plc: 12, assy: 12, qc: 12, idle: 12, idleLots: [{qty:12, days:7}], progress: 0, shipments: 0, rework: 0, lastMade: 0, monthMade: 0, rushDays: 0, monthlyCapBase: 12, monthlyCapRush: 15 },
+      assembly: { orderBacklog: 0, frame: 12, plc: 12, assy: 12, qc: 12, idle: 12, idleLots: seedIdleLots(12), progress: 0, shipments: 0, rework: 0, lastMade: 0, monthMade: 0, rushDays: 0, monthlyCapBase: 12, monthlyCapRush: 15, orderBacklogNormalized: true },
       financeFlow: { weeklyIn: 0, weeklyOut: 0, monthlyIn: 0, monthlyOut: 0, payroll: 0, outsource: 0, materials: 0, apPaid: 0, interest: 0, overhead: 0, vendors: 0, snacks: 0, admin: 0, weeklyVendors: 0, weeklySnacks: 0, weeklyAdmin: 0, sales: 0, cogs: 0 },
       depts,
       cooldowns: { salesPush: 0, cashPlan: 0, payPlan: 0, issue: 0 },
@@ -1975,10 +2232,7 @@
     const skill = 0.72 + deptLevel("factory") * 0.16 + deptLevel("office") * 0.15 + deptLevel("design") * 0.07 + deptLevel("api") * 0.045;
     const human = 0.55 + state.morale / 180 + state.safety / 220 - Math.max(0, state.pressure - 55) / 210;
     const watched = state.currentRoom === "assembly" ? 1.10 : 0.88;
-    const a = state.assembly || {};
-    const overload = Math.max(0, (a.orderBacklog||0) - 12) + Math.max(0, (a.frame||0) - 12) + Math.max(0, (a.assy||0) - 12) + Math.max(0, (a.plc||0) - 12) + Math.max(0, (a.qc||0) - 12);
-    const rush = (a.rushDays || 0) > 0 ? 1.22 : 1;
-    return clamp(skill * human * watched * rush + overload * 0.18, 0.20, 5.0);
+    return clamp(skill * human * watched, 0.20, 3.2);
   }
   function calcDefectRate() {
     return clamp(0.067 + Math.max(0, state.pressure - 55) / 520 + Math.max(0, 65 - state.safety) / 520 - deptLevel("design") * 0.009 - deptLevel("api") * 0.004, 0.018, 0.21);
@@ -1989,13 +2243,30 @@
     return (a.frame || 0) + (a.plc || 0) + (a.assy || 0) + (a.qc || 0) + (a.idle || 0);
   }
   function assemblyMonthlyCap() { return (state.assembly.rushDays || 0) > 0 ? state.assembly.monthlyCapRush : state.assembly.monthlyCapBase; }
+  function normalizeOrderBalance(targetState = state) {
+    const a = targetState?.assembly;
+    if (!a) return;
+    a.orderBacklog = Math.max(0, Math.round(a.orderBacklog || 0));
+    a.frame = Math.max(0, Math.round(a.frame || 0));
+    a.assy = Math.max(0, Math.round(a.assy || 0));
+    a.plc = Math.max(0, Math.round(a.plc || 0));
+    a.qc = Math.max(0, Math.round(a.qc || 0));
+    a.idle = Math.max(0, Math.round(a.idle || 0));
+    const started = a.frame + a.assy + a.plc + a.qc + a.idle;
+    // v4.4.13 displayed already-started orders as remaining orders.
+    // Migrate only that old double-counted baseline, so new incoming orders still stay visible.
+    if (!a.orderBacklogNormalized && a.orderBacklog >= 12 && started >= 12) {
+      a.orderBacklog = Math.max(0, a.orderBacklog - Math.min(12, a.orderBacklog));
+    }
+    a.orderBacklogNormalized = true;
+  }
   function equipmentUnitPrice() {
     const pressure = Math.min(0.08, (state.flags?.pricePressure || 0) * 0.02);
     return Math.round(rand(50_000_000, 70_000_000) * (1 - pressure));
   }
   function equipmentCostFromSales(value) {
-    const pressure = Math.min(0.035, (state.flags?.pricePressure || 0) * 0.012);
-    return Math.round(value * (0.958 + pressure));
+    const ratio = clamp(0.75 + rand(-0.05, 0.05), 0.70, 0.80);
+    return Math.round(value * ratio);
   }
   function ownerNetMonthly(salary) {
     const ratio = salary >= 10_000_000 ? 0.725 : salary >= 8_000_000 ? 0.755 : 0.79;
@@ -2015,11 +2286,10 @@
   function setOvertime(hour, reason="잔업") { const end = hour * 60; if (!state.workShift || end > shiftEndMinutes()) state.workShift = { end, reason, saturday:false }; }
   function planWorkShift() {
     const d = dateForDay(); const dow = d.getDay(); const a = state.assembly || {};
-    const overload = Math.max(0, (a.orderBacklog||0) - 12) + Math.max(0, (a.frame||0) - 12) + Math.max(0, (a.assy||0) - 12) + Math.max(0, (a.plc||0) - 12) + Math.max(0, (a.qc||0) - 12);
     let end = 19 * 60, reason = "정상근무", saturday = false;
-    if (overload > 0 || (a.rushDays||0) > 0 || state.flags?.orderMishap) { end = 21 * 60; reason = "강제잔업"; }
-    if (overload >= 4 || (a.orderBacklog||0) >= 16 || state.flags?.orderMishapHard) { end = 24 * 60; reason = "철야"; }
-    if (dow === 6) { saturday = overload > 0 || Math.random() < 0.18; reason = saturday ? "토요근무" : "토요휴무"; end = saturday ? Math.max(end, 18 * 60) : 9 * 60; }
+    if ((a.orderBacklog||0) >= 8 || (a.rework||0) >= 4 || (a.rushDays||0) > 0 || state.flags?.orderMishap) { end = 21 * 60; reason = "잔업"; }
+    if ((a.orderBacklog||0) >= 12 || state.flags?.orderMishapHard) { end = 24 * 60; reason = "철야"; }
+    if (dow === 6) { saturday = ((a.orderBacklog||0) >= 7) || Math.random() < 0.25; reason = saturday ? "토요근무" : "토요휴무"; end = saturday ? Math.max(end, 18 * 60) : 9 * 60; }
     if (dow === 0) { reason = "휴무"; end = 9 * 60; }
     state.workShift = { end, reason, saturday };
     if (state.flags) { state.flags.orderMishap = false; state.flags.orderMishapHard = false; }
@@ -2049,7 +2319,9 @@
   function dailyUpdate() {
     const startCash = state.cash;
     const orders = Math.round(calcDailyOrders() * rand(0.84, 1.18));
-    // 문의/수주는 대기만 늘리고, 매출은 출고 시점에만 잡는다.
+    state.receivables += orders;
+    state.financeFlow.sales += orders;
+    state.financeFlow.cogs += Math.round(orders * clamp(0.75 + rand(-0.05, 0.05), 0.70, 0.80));
     if (Math.random() < clamp(orders / 90_000_000, 0.08, 0.45)) state.assembly.orderBacklog += 1;
     if ((state.assembly.orderBacklog || 0) > assemblyMonthlyCap()) { state.flags.orderMishap = true; state.assembly.rushDays = Math.max(state.assembly.rushDays || 0, 6); }
 
@@ -2065,7 +2337,7 @@
     const payableAccrual = Math.round(costBreakdown.materials + deptLevel("vendor") * 12_000_000);
     state.payables += payableAccrual;
 
-    const apPayment = Math.min(state.payables, Math.round(state.payables * (0.0028 + state.vendorTrust / 100000 + deptLevel("procurement") * 0.00035)));
+    const apPayment = Math.min(state.payables, Math.round(state.payables * (0.032 + state.vendorTrust / 2400 + deptLevel("procurement") * 0.0025)));
     state.payables -= apPayment;
     state.cash -= apPayment;
 
@@ -2160,6 +2432,7 @@
     syncIdleLots();
   }
   function advanceAssembly() {
+    normalizeOrderBalance(state);
     const a = state.assembly;
     a.lastMade = 0;
     a.assy ??= 0;
@@ -2167,20 +2440,20 @@
     advanceIdleLots();
     a.progress += calcAssemblyRate();
     let moves = 0;
-    const start = { order: a.orderBacklog || 0, frame: a.frame || 0, assy: a.assy || 0, plc: a.plc || 0, qc: a.qc || 0 };
-    while (a.progress >= 1 && moves < 14) {
+    const start = { order: a.orderBacklog || 0, frame: a.frame || 0, plc: a.plc || 0, assy: a.assy || 0, qc: a.qc || 0 };
+    while (a.progress >= 1 && moves < 10) {
       a.progress -= 1; moves += 1;
-      if (start.qc > 0) {
+      if (start.qc > 0 && (a.idle || 0) < 12) {
         start.qc -= 1; a.qc -= 1;
         if (Math.random() < calcDefectRate()) { a.rework += 1; a.assy += 1; state.pressure = clamp(state.pressure + 0.7, 0, 100); }
         else pushIdleLot(1);
-      } else if (start.plc > 0) {
-        start.plc -= 1; a.plc -= 1; a.qc += 1;
-      } else if (start.assy > 0) {
-        start.assy -= 1; a.assy -= 1; a.plc += 1;
-      } else if (start.frame > 0) {
-        start.frame -= 1; a.frame -= 1; a.assy += 1;
-      } else if (start.order > 0) {
+      } else if (start.assy > 0 && (a.qc || 0) < 12) {
+        start.assy -= 1; a.assy -= 1; a.qc += 1;
+      } else if (start.plc > 0 && (a.assy || 0) < 12) {
+        start.plc -= 1; a.plc -= 1; a.assy += 1;
+      } else if (start.frame > 0 && (a.plc || 0) < 12) {
+        start.frame -= 1; a.frame -= 1; a.plc += 1;
+      } else if (start.order > 0 && (a.frame || 0) < 12) {
         start.order -= 1; a.orderBacklog -= 1; a.frame += 1;
       } else break;
     }
@@ -2213,30 +2486,18 @@
     const target = assemblyMonthlyCap();
     let need = Math.max(0, target - (a.monthMade || 0));
     if (need <= 0) return;
-    const sourceCount = (a.orderBacklog||0) + (a.frame||0) + (a.assy||0) + (a.plc||0) + (a.qc||0) + (a.idle||0);
-    if (sourceCount < need) a.orderBacklog = (a.orderBacklog || 0) + (need - sourceCount);
-    let forced = 0;
-    const shipOne = () => {
-      syncIdleLots();
-      const lot = (a.idleLots || []).find(x => x.qty > 0);
-      if (lot) { lot.qty -= 1; completeShipment(1); syncIdleLots(); return true; }
-      if ((a.qc||0) > 0) { a.qc -= 1; completeShipment(1); forced += 1; return true; }
-      if ((a.plc||0) > 0) { a.plc -= 1; a.qc += 1; forced += 1; return shipOne(); }
-      if ((a.assy||0) > 0) { a.assy -= 1; a.plc += 1; forced += 1; return shipOne(); }
-      if ((a.frame||0) > 0) { a.frame -= 1; a.assy += 1; forced += 1; return shipOne(); }
-      if ((a.orderBacklog||0) > 0) { a.orderBacklog -= 1; a.frame += 1; forced += 1; return shipOne(); }
-      return false;
-    };
-    while (need > 0 && shipOne()) need -= 1;
-    if (forced > 0) {
-      const cost = forced * 2_200_000;
-      state.cash -= cost;
-      state.financeFlow.vendors = (state.financeFlow.vendors || 0) + cost;
-      state.financeFlow.weeklyVendors = (state.financeFlow.weeklyVendors || 0) + cost;
-      state.financeFlow.weeklyOut += cost;
-      state.financeFlow.monthlyOut += cost;
-      addToast(`월말 납기 맞춤: 강제 투입/외주비 ${money(cost)}.`);
+    syncIdleLots();
+    for (const lot of (a.idleLots || [])) {
+      if (need <= 0) break;
+      const qty = Math.min(lot.qty, need);
+      lot.qty -= qty; need -= qty; completeShipment(qty);
     }
+    a.idleLots = (a.idleLots || []).filter(l => l.qty > 0);
+    syncIdleLots();
+    while (need > 0 && (a.qc || 0) > 0) { a.qc -= 1; need -= 1; completeShipment(1); }
+    while (need > 0 && (a.assy || 0) > 0) { a.assy -= 1; need -= 1; completeShipment(1); }
+    while (need > 0 && (a.plc || 0) > 0) { a.plc -= 1; need -= 1; completeShipment(1); }
+    while (need > 0 && (a.frame || 0) > 0) { a.frame -= 1; need -= 1; completeShipment(1); }
   }
 
   function updateRiskPressure(orders, collected, operatingCost, payableAccrual, apPayment, interest) {
@@ -2277,8 +2538,6 @@
     if (e.semiAnnual) state.flags[e.semiAnnual] = state.day;
     if (e.monthly) state.flags[`${e.monthly}_${year}_${month}`] = true;
     const cost = Math.round(e.cost());
-    let eventMsg = e.msg;
-    if (e.trip && state.flags.lastTrip) eventMsg = `${e.msg} ${state.flags.lastTrip.country} 출장, 항공/숙박 ${money(cost)}.`;
     if (cost > 0) state.cash -= cost;
     state.pressure = clamp(state.pressure + (e.pressure || 0), 0, 100);
     state.morale = clamp(state.morale + (e.morale || 0), 0, 100);
@@ -2287,8 +2546,6 @@
     state.legalRisk = clamp(state.legalRisk + (e.legal || 0), 0, 100);
     state.vendorTrust = clamp(state.vendorTrust + (e.vendor || 0), 0, 100);
     state.payables += e.ap || 0;
-    if (e.orderLoss) state.assembly.orderBacklog = Math.max(0, (state.assembly.orderBacklog || 0) - e.orderLoss);
-    if (e.delay) { state.assembly.rushDays = Math.max(state.assembly.rushDays || 0, e.delay); state.flags.orderMishap = true; }
     if (e.pricePressure) state.flags.pricePressure = (state.flags.pricePressure || 0) + e.pricePressure;
     state.assembly.rework += e.rework || 0;
     state.assembly.orderBacklog += e.backlog || 0;
@@ -2298,9 +2555,8 @@
     if (e.bucket === "snacks") { state.financeFlow.snacks += cost; state.financeFlow.weeklySnacks = (state.financeFlow.weeklySnacks || 0) + cost; }
     else if (e.bucket === "vendors") { state.financeFlow.vendors = (state.financeFlow.vendors || 0) + cost; state.financeFlow.weeklyVendors = (state.financeFlow.weeklyVendors || 0) + cost; }
     else { state.financeFlow.admin = (state.financeFlow.admin || 0) + cost; state.financeFlow.weeklyAdmin = (state.financeFlow.weeklyAdmin || 0) + cost; }
-    const noCostTail = e.orderLoss ? `수주 -${e.orderLoss}대` : e.delay ? "납기 차질" : "신뢰도 하락";
-    flashEvent(e.title, cost > 0 ? `${eventMsg} 손실 -${money(cost)}` : `${eventMsg} ${noCostTail}`);
-    addToast(`${e.title}: ${eventMsg}`);
+    flashEvent(e.title, cost > 0 ? `${e.msg} 손실 -${money(cost)}` : `${e.msg} 신뢰도 하락`);
+    addToast(`${e.title}: ${e.msg}`);
     return true;
   }
 
@@ -2339,10 +2595,11 @@
       const e = badLuckDefs.find(x => x.yearly === "chinaCopy");
       if (e) {
         state.flags.chinaCopy = year;
-        state.assembly.orderBacklog = Math.max(0, (state.assembly.orderBacklog || 0) - 1);
-        state.reputation = clamp(state.reputation - 1, 0, 100);
-        state.pressure = clamp(state.pressure + 5, 0, 100);
-        flashEvent(e.title, `${e.msg} 수주 -1대`);
+        state.flags.pricePressure = (state.flags.pricePressure || 0) + 1;
+        const cost = Math.round(e.cost());
+        state.cash -= cost;
+        state.financeFlow.admin += cost; state.financeFlow.weeklyAdmin += cost; state.financeFlow.weeklyOut += cost; state.financeFlow.monthlyOut += cost;
+        flashEvent(e.title, `${e.msg} 견적 손실 -${money(cost)}`);
         addToast(`${e.title}: ${e.msg}`);
         return;
       }
@@ -2427,47 +2684,12 @@
     addToast(`QC가 버티지 못했다. 클레임 비용 ${money(cost)}.`);
   }
 
-  function inventoryValue() {
-    const a = state.assembly || {};
-    const unitCost = equipmentCostFromSales(60_000_000);
-    return Math.round((a.frame||0) * unitCost * 0.25 + (a.assy||0) * unitCost * 0.50 + (a.plc||0) * unitCost * 0.70 + (a.qc||0) * unitCost * 0.86 + (a.idle||0) * unitCost * 0.95);
-  }
-  function balanceSheet() {
-    const fixedAssets = state.flags?.overseasComplete ? 720_000_000 : 1_150_000_000;
-    const inventory = inventoryValue();
-    const assets = Math.max(0, state.cash) + state.receivables + inventory + fixedAssets;
-    const liabilities = state.payables + state.debt;
-    const equity = assets - liabilities;
-    const capitalStock = 300_000_000;
-    return { cash: state.cash, receivables: state.receivables, inventory, fixedAssets, assets, payables: state.payables, debt: state.debt, liabilities, equity, capitalStock };
-  }
-  function incomeStatement() {
-    const sales = state.financeFlow.sales || 0;
-    const cogs = state.financeFlow.cogs || 0;
-    const grossProfit = sales - cogs;
-    const sgna = (state.financeFlow.admin || 0) + (state.financeFlow.snacks || 0) + Math.round((state.financeFlow.payroll || 0) * 0.48);
-    const operatingProfit = grossProfit - sgna;
-    const netProfit = operatingProfit - (state.financeFlow.interest || 0);
-    return { sales, cogs, grossProfit, sgna, operatingProfit, interest: state.financeFlow.interest || 0, netProfit };
-  }
-  function manufacturingStatement() {
-    const payroll = state.financeFlow.payroll || 0;
-    const directLabor = Math.round(payroll * 0.52);
-    const materials = state.financeFlow.materials || 0;
-    const outsource = state.financeFlow.outsource || 0;
-    const overhead = Math.round((state.financeFlow.overhead || 0) + (state.financeFlow.admin || 0) * 0.35);
-    const totalMfgCost = materials + outsource + directLabor + overhead;
-    return { materials, outsource, directLabor, overhead, totalMfgCost };
-  }
-  function equityEstimate() { return balanceSheet().equity; }
-  function capitalImpairmentRate() {
-    const b = balanceSheet();
-    return b.equity >= b.capitalStock ? 0 : Math.round((b.capitalStock - b.equity) / b.capitalStock * 100);
+  function equityEstimate() {
+    return state.cash + state.receivables + 2_800_000_000 - state.payables - state.debt;
   }
   function debtRatioEstimate() {
-    const b = balanceSheet();
-    if (b.equity <= 0) return 9999;
-    return Math.round(b.liabilities / b.equity * 100);
+    const eq = Math.max(1, equityEstimate());
+    return Math.round((state.debt + state.payables) / eq * 100);
   }
   function checkEndStates() {
     if (state.flags.gameOver || state.flags.stabilized) return;
@@ -2507,7 +2729,6 @@
     showModal(`<div class="modal-header"><h2>${escapeHtml(reason)}</h2><p>은행과 거래처에서 부실 연락이 오기 시작했습니다. 파산하시겠습니까?</p></div>
       <div class="modal-body"><div class="mini-table">
         <div class="mini-cell"><label>자본</label><strong>${money(equityEstimate())}</strong></div>
-        <div class="mini-cell"><label>자본잠식률</label><strong>${capitalImpairmentRate()}%</strong></div>
         <div class="mini-cell"><label>부채비율</label><strong>${debtRatioEstimate()}%</strong></div>
         <div class="mini-cell"><label>미지급</label><strong>${money(state.payables)}</strong></div>
         <div class="mini-cell"><label>현금</label><strong>${money(state.cash)}</strong></div>
@@ -2556,7 +2777,10 @@
     pill.classList.toggle("bad", survival < 20);
     pill.classList.toggle("warn", survival >= 20 && survival < 60);
     pill.textContent = `생존 ${state.day}일차`;
-    document.getElementById("routePill").textContent = state.company ? `${companyFullName()} · ${state.flags?.overseasCountdown ? `${state.route} D-${state.flags.overseasCountdown}` : state.route}` : state.route;
+    const routeEl = document.getElementById("routePill");
+    const shortRoute = state.flags?.overseasCountdown ? `${state.route} D-${state.flags.overseasCountdown}` : state.route;
+    routeEl.textContent = shortRoute;
+    routeEl.title = state.company ? `${companyFullName()} · ${shortRoute}` : shortRoute;
 
     const cashEl = document.getElementById("cashVal");
     cashEl.textContent = money(state.cash);
@@ -2741,12 +2965,12 @@
     syncIdleLots();
     const item = (name, count, cap=12, hot=false) => `<div class="flow-card ${hot ? "hot" : ""}"><b>${name}</b><strong>${count}/${cap}</strong><div class="flow-bar"><i style="width:${clamp(count / cap * 100, 0, 100)}%"></i></div></div>`;
     return `<div class="assembly-flow">
-      ${item("수주", a.orderBacklog || 0, Math.max(12, a.orderBacklog || 0), (a.orderBacklog || 0) > 12)}
-      ${item("프레임", a.frame || 0, Math.max(12, a.frame || 0), (a.frame || 0) > 12)}
-      ${item("아쎄이", a.assy || 0, Math.max(12, a.assy || 0), (a.assy || 0) > 12)}
-      ${item("PLC/전장", a.plc || 0, Math.max(12, a.plc || 0), (a.plc || 0) > 12)}
-      ${item("QC", a.qc || 0, Math.max(12, a.qc || 0), (a.qc || 0) > 12)}
-      ${item("출고대기", a.idle || 0, 12, (a.idle || 0) > 0)}
+      ${item("수주", a.orderBacklog || 0, Math.max(12, a.orderBacklog || 0), (a.orderBacklog || 0) > assemblyMonthlyCap())}
+      ${item("프레임", a.frame || 0)}
+      ${item("아쎄이", a.assy || 0)}
+      ${item("PLC/전장", a.plc || 0)}
+      ${item("QC", a.qc || 0)}
+      ${item("Idle/출고", a.idle || 0, 12, (a.idle || 0) > 0)}
     </div>`;
   }
   function renderOfficeStage() {
@@ -2782,7 +3006,7 @@
     } else if (state.currentRoom === "assembly") {
       content = `<div class="room-status-grid">
         <div class="tiny-stat"><label>라인</label><strong>${assemblyWip()}/60</strong></div>
-        <div class="tiny-stat"><label>대기수주</label><strong>${a.orderBacklog || 0}대</strong></div>
+        <div class="tiny-stat"><label>수주잔량</label><strong>${a.orderBacklog || 0}대</strong></div>
         <div class="tiny-stat"><label>월 출고</label><strong>${a.monthMade}/${assemblyMonthlyCap()}대</strong></div>
         <div class="tiny-stat"><label>조립속도</label><strong>${calcAssemblyRate().toFixed(2)}/일</strong></div>
       </div>`;
@@ -2950,37 +3174,22 @@
   }
   function openMonthlyReport(auto) {
     state.paused = true;
-    const b = balanceSheet();
-    const i = incomeStatement();
-    const m = manufacturingStatement();
-    showModal(`<div class="modal-header"><h2>월간 보고</h2><p>이번 달 숫자. 복잡한 회계는 뒤로 빼고 핵심만 본다.</p></div>
+    const sales = state.financeFlow.sales || state.financeFlow.monthlyIn || 0;
+    const out = (state.financeFlow.cogs || 0) + (state.financeFlow.payroll || 0) + (state.financeFlow.vendors || state.financeFlow.outsource || 0) + (state.financeFlow.snacks || 0) + (state.financeFlow.admin || 0) + (state.financeFlow.interest || 0);
+    const profit = sales - out;
+    showModal(`<div class="modal-header"><h2>월간 보고</h2><p>월말 숫자.</p></div>
       <div class="modal-body">
-        <h3>손익계산서</h3>
         <div class="mini-table">
-          <div class="mini-cell"><label>매출</label><strong class="positive">+${money(i.sales)}</strong></div>
-          <div class="mini-cell"><label>매출원가</label><strong class="negative">-${money(i.cogs)}</strong></div>
-          <div class="mini-cell"><label>매출총이익</label><strong class="${i.grossProfit >= 0 ? "positive" : "negative"}">${signedMoney(i.grossProfit)}</strong></div>
-          <div class="mini-cell"><label>순이익</label><strong class="${i.netProfit >= 0 ? "positive" : "negative"}">${signedMoney(i.netProfit)}</strong></div>
-        </div>
-        <h3>제조원가명세서</h3>
-        <div class="mini-table">
-          <div class="mini-cell"><label>재료/외주</label><strong>-${money(m.materials + m.outsource)}</strong></div>
-          <div class="mini-cell"><label>생산직 급여</label><strong>-${money(m.directLabor)}</strong></div>
-          <div class="mini-cell"><label>제조경비</label><strong>-${money(m.overhead)}</strong></div>
-          <div class="mini-cell"><label>당월제조비용</label><strong>-${money(m.totalMfgCost)}</strong></div>
-        </div>
-        <h3>재무상태표</h3>
-        <div class="mini-table">
-          <div class="mini-cell"><label>자산</label><strong>${money(b.assets)}</strong></div>
-          <div class="mini-cell"><label>부채</label><strong>${money(b.liabilities)}</strong></div>
-          <div class="mini-cell"><label>자본</label><strong class="${b.equity >= 0 ? "positive" : "negative"}">${money(b.equity)}</strong></div>
-          <div class="mini-cell"><label>자본잠식률</label><strong class="${capitalImpairmentRate() > 0 ? "negative" : "positive"}">${capitalImpairmentRate()}%</strong></div>
+          <div class="mini-cell"><label>월 들어온 돈</label><strong class="positive">+${money(sales)}</strong></div>
+          <div class="mini-cell"><label>월 나간 돈</label><strong class="negative">-${money(out)}</strong></div>
+          <div class="mini-cell"><label>총 월 이익</label><strong class="${profit >= 0 ? "positive" : "negative"}">${signedMoney(profit)}</strong></div>
+          <div class="mini-cell"><label>현금 수금</label><strong class="positive">+${money(state.financeFlow.monthlyIn)}</strong></div>
         </div>
         <div class="mini-table">
-          <div class="mini-cell"><label>현금</label><strong>${money(state.cash)}</strong></div>
+          <div class="mini-cell"><label>월급</label><strong class="negative">-${money(state.financeFlow.payroll)}</strong></div>
+          <div class="mini-cell"><label>업체/외주</label><strong class="negative">-${money(state.financeFlow.vendors || state.financeFlow.outsource)}</strong></div>
           <div class="mini-cell"><label>채권</label><strong>${money(state.receivables)}</strong></div>
           <div class="mini-cell"><label>미지급</label><strong>${money(state.payables)}</strong></div>
-          <div class="mini-cell"><label>월 출고</label><strong>${state.assembly.monthMade}/${assemblyMonthlyCap()}대</strong></div>
         </div>
         <div class="modal-actions"><button id="monthlyContinueBtn">계속</button></div>
       </div>`);
@@ -3047,7 +3256,7 @@
       localStorage.setItem(slotKey(n), JSON.stringify(snap)); localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); addToast(`슬롯 ${n} 저장 완료.`); closeModal(); state.paused = false;
     }));
     document.querySelectorAll("[data-load-slot]").forEach(btn => btn.addEventListener("click", () => {
-      const n = btn.dataset.loadSlot; const s = slotInfo(n); if (!s) return; state = s; localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); lastRoomStageSig = ""; toasts = []; closeModal(); state.paused = false; addToast(`슬롯 ${n} 불러오기 완료.`); renderDirty = true;
+      const n = btn.dataset.loadSlot; const s = slotInfo(n); if (!s) return; normalizeOrderBalance(s); state = s; localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); lastRoomStageSig = ""; toasts = []; closeModal(); state.paused = false; addToast(`슬롯 ${n} 불러오기 완료.`); renderDirty = true;
     }));
     document.getElementById("closeSaveModal").addEventListener("click", () => { closeModal(); state.paused = false; });
   }
@@ -3056,15 +3265,15 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return null;
       const parsed = JSON.parse(raw);
-      if (!parsed || ![41,42,43,44,45,46,47,48,49,50,51,52].includes(parsed.version)) return null;
+      if (!parsed || ![41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56].includes(parsed.version)) return null;
       for (const key of Object.keys(deptDefs)) {
         if (!parsed.depts[key]) parsed.depts[key] = { level: key === "vendor" ? 0 : 1, unlocked: key !== "vendor", boost: 0 };
       }
       for (const key of Object.keys(actionDefs)) {
         if (parsed.cooldowns[key] == null) parsed.cooldowns[key] = 0;
       }
-      if (!parsed.assembly) parsed.assembly = { orderBacklog: 10, frame: 8, plc: 5, assy: 4, qc: 3, idle: 3, idleLots: [{qty:1, days:32}, {qty:1, days:61}, {qty:1, days:88}], progress: 0, shipments: 0, rework: 0, lastMade: 0, monthMade: 0, rushDays: 0, monthlyCapBase: 12, monthlyCapRush: 15 };
-      parsed.assembly.orderBacklog ??= 12; parsed.assembly.frame ??= 12; parsed.assembly.plc ??= 12; parsed.assembly.assy ??= 12; parsed.assembly.qc ??= 12; parsed.assembly.idle ??= 12; if (!parsed.assembly.idleLots) parsed.assembly.idleLots = parsed.assembly.idle ? [{qty: parsed.assembly.idle, days: 7}] : [];
+      if (!parsed.assembly) parsed.assembly = { orderBacklog: 0, frame: 12, plc: 12, assy: 12, qc: 12, idle: 12, idleLots: seedIdleLots(12), progress: 0, shipments: 0, rework: 0, lastMade: 0, monthMade: 0, rushDays: 0, monthlyCapBase: 12, monthlyCapRush: 15, orderBacklogNormalized: true };
+      parsed.assembly.orderBacklog ??= 0; parsed.assembly.frame ??= 12; parsed.assembly.plc ??= 12; parsed.assembly.assy ??= 12; parsed.assembly.qc ??= 12; parsed.assembly.idle ??= 12; if (!parsed.assembly.idleLots) parsed.assembly.idleLots = parsed.assembly.idle ? [{qty: parsed.assembly.idle, days: 7}] : [];
       parsed.assembly.monthMade ??= 0; parsed.assembly.rushDays ??= 0; parsed.assembly.monthlyCapBase ??= 12; parsed.assembly.monthlyCapRush ??= 15;
       if (!parsed.financeFlow) parsed.financeFlow = { weeklyIn: 0, weeklyOut: 0, monthlyIn: 0, monthlyOut: 0, payroll: 0, outsource: 0, materials: 0, apPaid: 0, interest: 0, overhead: 0, sales: 0, cogs: 0 };
       parsed.financeFlow.sales ??= 0; parsed.financeFlow.cogs ??= 0;
@@ -3074,9 +3283,10 @@
       if (!parsed.owner) parsed.owner = { salary: 8_000_000, net: ownerNetMonthly(8_000_000), monthlySaving: ownerMonthlySaving(8_000_000), personalSaved: 0 };
       parsed.owner.net = ownerNetMonthly(parsed.owner.salary || 8_000_000); parsed.owner.monthlySaving = ownerMonthlySaving(parsed.owner.salary || 8_000_000);
       if (!parsed.flags) parsed.flags = {}; parsed.flags.nextAccidentDay ??= parsed.day + Math.floor(rand(90,181)); parsed.flags.pricePressure ??= 0;
-      if (!parsed.debtBreakdown) parsed.debtBreakdown = { collateral: 300_000_000, creditGuarantee: 100_000_000, kiboGuarantee: 100_000_000 };
+      if (!parsed.debtBreakdown) parsed.debtBreakdown = { collateral: 300_000_000, creditGuarantee: 100_000_000, techGuarantee: 100_000_000 };
       if (!parsed.currentRoom) parsed.currentRoom = "field";
       parsed.workforce = { total: 62, field: 24, assembly: 8, office: 20, design: 10, partners: 27, general: 5, sales: 4, cs: 8, purchasing: 3, avgWage: GYEONGGI_AVG_WAGE, companyWage: COMPANY_MONTHLY_WAGE, vietnamWage: VIETNAM_COMPANY_WAGE };
+      normalizeOrderBalance(parsed);
       return parsed;
     } catch (e) { return null; }
   }
@@ -3118,14 +3328,10 @@
     state.paused = true;
     showModal(`<div class="modal-header"><h2>이번 달까지만 버텨주세요<br><small>Please Let Us Survive This Month</small></h2><p>《이번 달까지만 버텨주세요》는 한국 중소 제조업 생존을 소재로 한 경영 시뮬레이션 게임입니다.</p></div>
       <div class="modal-body">
-        <p class="intro-copy">플레이어는 자금난에 시달리는 중소 제조업 회사를 운영하게 됩니다.</p>
-        <p class="intro-copy">생산은 돌아가지만 돈은 부족하고, 은행은 압박하고, 거래처는 납기를 재촉합니다.</p>
-        <p class="intro-copy">현장, 조립실, 사무실, 설계실을 오가며 생산 관리, 현금 흐름 관리, 설계 개선, 납기 대응을 수행해야 합니다.</p>
-        <p class="intro-copy">기존 경영 게임이 회사를 크게 성장시키는 데 집중했다면, 이 게임의 목표는 단순합니다. <b>“이번 달도 살아남는 것.”</b></p>
         <div class="setup-form">
           <label>이름<input id="companyCore" placeholder="이름만 입력" maxlength="12" /></label>
           <label>접두<select id="companyPrefix"><option value="">접두 없음</option><option value="믿음">믿음</option><option value="제일">제일</option><option value="으뜸">으뜸</option><option value="첨단">첨단</option><option value="ONE">ONE</option><option value="남동">남동</option><option value="대신">대신</option><option value="우성">우성</option><option value="우리">우리</option><option value="부성">부성</option><option value="태화">태화</option><option value="효진">효진</option><option value="두원">두원</option><option value="인성">인성</option><option value="진성">진성</option><option value="월드">월드</option><option value="명성">명성</option><option value="코리아">코리아</option><option value="대륙">대륙</option><option value="일신">일신</option><option value="형제">형제</option><option value="백두">백두</option><option value="태양">태양</option><option value="금강">금강</option><option value="하나">하나</option><option value="특수">특수</option><option value="쌍마">쌍마</option><option value="신화">신화</option><option value="벨엘">벨엘</option><option value="유진">유진</option></select></label>
-          <label>접미<select id="companySuffix"><option value="">접미 없음</option><option value="텍">텍</option><option value="파워">파워</option><option value="상사">상사</option><option value="피아">피아</option><option value="파인">파인</option><option value="시스템">시스템</option><option value="공업">공업</option><option value="기술">기술</option><option value="볼트">볼트</option><option value="금속">금속</option><option value="스텐">스텐</option><option value="연마">연마</option><option value="도장">도장</option><option value="특장">특장</option><option value="닥트">닥트</option><option value="비철">비철</option><option value="만물">만물</option><option value="워터">워터</option><option value="기계">기계</option><option value="전기">전기</option><option value="전파">전파</option><option value="합성">합성</option><option value="기전">기전</option><option value="eng">eng</option><option value="이엔지">이엔지</option><option value="켐">켐</option><option value="정밀">정밀</option><option value="네트워크">네트워크</option></select></label>
+          <label>접미<select id="companySuffix"><option value="">접미 없음</option><option value="테크">테크</option><option value="텍">텍</option><option value="파워">파워</option><option value="상사">상사</option><option value="피아">피아</option><option value="파인">파인</option><option value="시스템">시스템</option><option value="공업">공업</option><option value="기술">기술</option><option value="볼트">볼트</option><option value="금속">금속</option><option value="스텐">스텐</option><option value="연마">연마</option><option value="도장">도장</option><option value="특장">특장</option><option value="닥트">닥트</option><option value="비철">비철</option><option value="만물">만물</option><option value="워터">워터</option><option value="기계">기계</option><option value="전기">전기</option><option value="전파">전파</option><option value="합성">합성</option><option value="기전">기전</option><option value="eng">eng</option><option value="이엔지">이엔지</option><option value="켐">켐</option><option value="정밀">정밀</option><option value="네트워크">네트워크</option></select></label>
           <label>당신 월급<input id="ownerSalary" type="number" min="0" step="100000" value="8000000" /></label>
         </div>
         <div class="mini-table setup-summary">
@@ -3133,7 +3339,7 @@
           <div class="mini-cell"><label>실수령 추정</label><strong id="ownerNetPreview">604만원</strong></div>
           <div class="mini-cell"><label>월 저축 추정</label><strong id="ownerSavePreview">254만원</strong></div>
         </div>
-        <p class="intro-line">회사 이름과 사장 월급을 정하고, 이번 달을 시작합니다.</p>
+        <p class="intro-line">생산은 돌아가지만 돈은 부족하고, 은행은 압박하고, 거래처는 납기를 재촉합니다. 현장, 조립실, 사무실, 설계실을 오가며 생산 관리, 현금 흐름 관리, 설계 개선, 납기 대응을 수행하세요. 목표는 단순합니다. <b>이번 달도 살아남는 것.</b></p>
         <div class="modal-actions"><button id="startBtn">시작</button></div>
       </div>`);
     const prefix = document.getElementById("companyPrefix");
@@ -3159,6 +3365,416 @@
       addToast(`${companyFullName()} 운영 시작. 사장 월급 ${money(s)}/월.`);
       renderDirty = true;
     });
+  }
+
+
+  // v4.5.4 order backlog balance fixes
+  actionDefs.salesPush.title = "초과 생산";
+  actionDefs.salesPush.sub = "수주를 늘리지 않고 프레임부터 당김";
+  actionDefs.salesPush.run = () => {
+    const a = state.assembly;
+    normalizeOrderBalance(state);
+    const units = Math.floor(rand(2, 5));
+    const frameRoom = Math.max(0, 16 - (a.frame || 0));
+    const pull = Math.min(units, Math.max(0, a.orderBacklog || 0), frameRoom);
+    const makeAhead = pull > 0 ? 0 : Math.min(units, frameRoom);
+    const make = pull + makeAhead;
+    if (make <= 0) { addToast("프레임 칸이 꽉 찼다. 먼저 아쎄이로 넘겨야 한다."); return false; }
+    if (pull > 0) a.orderBacklog = Math.max(0, (a.orderBacklog || 0) - pull);
+    a.frame = (a.frame || 0) + make;
+    a.rushDays = Math.max(a.rushDays || 0, 10);
+    const extra = Math.round(make * rand(1_200_000, 2_600_000));
+    state.payables += extra;
+    state.financeFlow.vendors = (state.financeFlow.vendors || 0) + extra;
+    state.financeFlow.weeklyVendors = (state.financeFlow.weeklyVendors || 0) + extra;
+    state.financeFlow.monthlyOut += extra;
+    state.financeFlow.weeklyOut += extra;
+    if ((a.orderBacklog || 0) >= 12 || (a.frame || 0) > 12) setOvertime(24, "철야");
+    else setOvertime(21, "잔업");
+    state.pressure = clamp(state.pressure + 6, 0, 100);
+    state.morale = clamp(state.morale - 3, 0, 100);
+    const backlogText = pull > 0 ? ` / 수주잔량 -${pull}대` : "";
+    flashEvent("초과 생산", `프레임 +${make}대${backlogText} / 외주·잔업 ${money(extra)}`);
+    addToast(`초과 생산: 수주잔량 ${pull}대를 프레임으로 넘기고, 프레임 ${make}대를 밀어 넣었다.`);
+    return true;
+  };
+
+  function pickCsTrip() {
+    const trips = [
+      { country:"베트남", cost: Math.round(rand(1_600_000, 3_200_000)) },
+      { country:"독일", cost: Math.round(rand(5_000_000, 8_500_000)) },
+      { country:"브라질", cost: Math.round(rand(6_800_000, 9_800_000)) },
+      { country:"멕시코", cost: Math.round(rand(4_800_000, 7_500_000)) }
+    ];
+    return trips[Math.floor(Math.random() * trips.length)];
+  }
+
+  badLuckDefs.splice(0, badLuckDefs.length,
+    { title:"라벨 오타", msg:"라벨 한 줄이 틀려 출고 확인이 밀렸다. 비용은 없지만 거래처 신뢰가 깎였다.", bucket:"admin", cost:()=>0, pressure:1, reputation:-2, delay:1 },
+    { title:"한달 전 세금계산서 수정", msg:"한달 전 계산서 수정 요청이 왔다. 돈은 안 나갔지만 신뢰가 깎였다.", bucket:"admin", cost:()=>0, pressure:1, reputation:-2, vendor:-1 },
+    { title:"도금/분체 무상 변경 요구", msg:"이미 끝난 외주를 고객사가 공짜로 바꿔달라고 했다.", bucket:"vendors", cost:()=>rand(2_000_000,9_800_000), pressure:4, rework:1, overtime:21 },
+    { title:"윈도우 업데이트", msg:"6개월 만에 또 업데이트가 꼬였다. 프로그래밍 PC와 장비 통신이 안 맞는다.", bucket:"admin", cost:()=>rand(3_000_000,9_800_000), pressure:4, rework:1, overtime:24, semiAnnual:"windowsUpdate" },
+    { title:"야근 간식비 200만원 초과", msg:"두세 달에 한 번씩 야근 간식비가 튄다.", bucket:"snacks", cost:()=>rand(2_000_000,4_800_000), pressure:1, morale:1, scheduled:"snack" },
+    { title:"외주 담당자 고령화로 인한 부고", msg:"비용은 없지만 인수인계가 비어 납기에 차질이 생겼다.", bucket:"vendors", cost:()=>0, pressure:4, vendor:-5, backlog:1, delay:3 },
+    { title:"영업 스펙 찐빠", msg:"영업 스펙이 틀렸다. 무상보증이라 CS가 해외 출장을 다녀와야 한다.", bucket:"admin", cost:()=>{ const t = pickCsTrip(); state.flags.lastTrip = t; return t.cost; }, pressure:5, legal:1, overtime:21, trip:true },
+    { title:"장비 항공운송", msg:"해상 일정이 터져 장비를 비행기로 보내야 한다.", bucket:"vendors", cost:()=>80_000_000, pressure:6, vendor:-3, ap:20_000_000, overtime:24, yearly:"airFreight" },
+    { title:"현장 버튼맨", msg:"핸드폰 보다가 가공품 실수가 났다. 큰 사고는 아니지만 다시 손봐야 한다.", bucket:"admin", cost:()=>rand(500_000,2_800_000), pressure:3, backlog:1, safety:-1, cs:1 },
+    { title:"공구/소재 아껴쓰기 한계", msg:"잘라 쓰던 공구와 소재가 결국 불량으로 돌아왔다.", bucket:"vendors", cost:()=>rand(2_000_000,8_500_000), pressure:3, rework:1 },
+    { title:"CS 나사 조임 불량", msg:"조립실에서 대충 넘어간 나사 조임 불량을 CS가 고객사에서 커버쳤다.", bucket:"admin", cost:()=>rand(2_000_000,9_500_000), pressure:4, rework:1, cs:1 },
+    { title:"중국산 1/3 가격 등장", msg:"중국에서 1/3 가격으로 비슷한 장비가 나왔다. 이번 비딩은 포기했다.", bucket:"admin", cost:()=>0, pressure:5, yearly:"chinaCopy", orderLoss:1, reputation:-1 }
+  );
+
+  function monthlySalesForecast() { return 12 * 58_000_000; }
+  function calcDailyOrders() {
+    const reputation = 0.92 + state.reputation / 700;
+    const priceDrag = Math.max(0.70, 1 - (state.flags?.pricePressure || 0) * 0.06);
+    return Math.round(monthlySalesForecast() / 30 * reputation * priceDrag);
+  }
+  function calcDailyDemandUnits() {
+    let chance = state.routeKey === "growth" ? 0.55 : 0.42;
+    chance += Math.max(0, state.reputation - 55) * 0.004;
+    chance -= (state.flags?.pricePressure || 0) * 0.05;
+    chance = clamp(chance, 0.18, 0.70);
+    let units = Math.random() < chance ? 1 : 0;
+    if (state.routeKey === "growth" && Math.random() < 0.10) units += 1;
+    return units;
+  }
+  function calcDailyCostBreakdown(orders = calcDailyOrders()) {
+    const late = state.workShift && state.workShift.end > 19 * 60;
+    const productionPeople = (state.workforce.field || 0) + (state.workforce.assembly || 0);
+    const koreaPeople = (state.workforce.office || 0) + (state.workforce.design || 0);
+    const productionWage = state.flags?.overseasComplete ? VIETNAM_COMPANY_WAGE : COMPANY_MONTHLY_WAGE;
+    let payroll = Math.round(((productionPeople * productionWage) + (koreaPeople * COMPANY_MONTHLY_WAGE) + (state.owner?.salary || 8_000_000)) / WORKDAYS_PER_MONTH);
+    if (late) payroll *= shiftEndMinutes() >= 24 * 60 ? 1.25 : 1.12;
+    if (state.workShift?.saturday) payroll *= 1.35;
+    const overOrders = Math.max(0, (state.assembly?.orderBacklog || 0) - 12);
+    const overFrame = Math.max(0, (state.assembly?.frame || 0) - 12);
+    let outsource = 13_000_000 + Math.max(0, state.pressure - 55) * 250_000 + (overOrders + overFrame) * 1_900_000;
+    let snacks = 60_000 + (late ? 420_000 : 0) + (state.workShift?.saturday ? 220_000 : 0);
+    let admin = 8_000_000 + Math.max(0, state.pressure - 55) * 130_000 + overOrders * 300_000;
+    let materials = Math.round((orders / 30) * 0.18 + (overFrame * 850_000));
+    materials *= 0.92;
+    return { payroll: Math.round(payroll), outsource: Math.round(outsource), vendors: Math.round(outsource + materials), snacks: Math.round(snacks), admin: Math.round(admin), overhead: Math.round(snacks + admin), materials: Math.round(materials) };
+  }
+
+  function dailyUpdate() {
+    const startCash = state.cash;
+    const newOrders = calcDailyDemandUnits();
+    if (newOrders > 0) state.assembly.orderBacklog = (state.assembly.orderBacklog || 0) + newOrders;
+    if ((state.assembly.orderBacklog || 0) > 12) {
+      state.assembly.rushDays = Math.max(state.assembly.rushDays || 0, 6);
+      if ((state.assembly.orderBacklog || 0) >= 16) setOvertime(24, "철야"); else setOvertime(21, "잔업");
+    }
+    let collected = Math.min(state.receivables, Math.round(state.receivables * calcCollectionRate() + deptLevel("finance") * 4_000_000));
+    if (state.routeKey === "overseas" && state.day > 28) collected += Math.min(state.receivables - collected, 20_000_000 + deptLevel("api") * 3_000_000);
+    state.receivables -= collected;
+    state.cash += collected;
+    const costBreakdown = calcDailyCostBreakdown(calcDailyOrders());
+    const operatingCost = costBreakdown.payroll + costBreakdown.outsource + costBreakdown.overhead;
+    state.cash -= operatingCost;
+    const payableAccrual = Math.round(costBreakdown.materials + costBreakdown.outsource * 0.55);
+    state.payables += payableAccrual;
+    const apDailyRate = 1 / Math.round(rand(180, 365));
+    const apPayment = Math.min(state.payables, Math.round(state.payables * apDailyRate));
+    state.payables -= apPayment;
+    state.cash -= apPayment;
+    const interest = Math.round(calcInterestDaily());
+    state.cash -= interest;
+    state.financeFlow.weeklyIn += collected;
+    state.financeFlow.weeklyOut += operatingCost + apPayment + interest;
+    state.financeFlow.monthlyIn += collected;
+    state.financeFlow.monthlyOut += operatingCost + apPayment + interest;
+    state.financeFlow.payroll += costBreakdown.payroll;
+    state.financeFlow.outsource += costBreakdown.outsource;
+    state.financeFlow.vendors = (state.financeFlow.vendors || 0) + costBreakdown.vendors;
+    state.financeFlow.snacks = (state.financeFlow.snacks || 0) + costBreakdown.snacks;
+    state.financeFlow.admin = (state.financeFlow.admin || 0) + costBreakdown.admin;
+    state.financeFlow.weeklyVendors = (state.financeFlow.weeklyVendors || 0) + costBreakdown.vendors;
+    state.financeFlow.weeklySnacks = (state.financeFlow.weeklySnacks || 0) + costBreakdown.snacks;
+    state.financeFlow.weeklyAdmin = (state.financeFlow.weeklyAdmin || 0) + costBreakdown.admin;
+    state.financeFlow.materials += payableAccrual;
+    state.financeFlow.overhead += costBreakdown.overhead;
+    state.financeFlow.apPaid += apPayment;
+    state.financeFlow.interest += interest;
+    advanceAssembly();
+    updateRiskPressure(calcDailyOrders(), collected, operatingCost, payableAccrual, apPayment, interest);
+    state.lastOrders = newOrders;
+    state.lastCollected = collected;
+    state.lastCosts = operatingCost + apPayment + interest;
+    state.todayCashDelta = state.cash - startCash;
+    state.lastDayCash = state.cash;
+    state.lastBurn = Math.round(((operatingCost + apPayment + interest) - collected) * 30);
+    state.monthProfit += state.todayCashDelta;
+    for (const key of Object.keys(state.cooldowns)) state.cooldowns[key] = Math.max(0, state.cooldowns[key] - 1);
+    if (state.assembly.rushDays > 0) state.assembly.rushDays -= 1;
+    if (state.day === 3 && !state.flags.routeEventShown) { state.flags.routeEventShown = true; openRouteChoice(); return; }
+    if (state.day % 30 === 0) { forceMonthlyShipment(12); openMonthlyReport(true); return; }
+    if (state.day % 7 === 0) { openWeeklyReport(true); return; }
+    maybeUnlocks(); progressOverseasMove(); maybeCrisis(); checkEndStates();
+  }
+
+  function randomIdleDays() { return Math.floor(rand(3, 16)); }
+  function pushIdleLot(qty = 1, days = null) {
+    const a = state.assembly;
+    a.idleLots = a.idleLots || [];
+    a.idleLots.push({ qty, days: days == null ? randomIdleDays() : days });
+    syncIdleLots();
+  }
+  function advanceIdleLots() {
+    const a = state.assembly;
+    if ((!a.idleLots || !a.idleLots.length) && (a.idle || 0) > 0) a.idleLots = [{ qty: a.idle, days: randomIdleDays() }];
+    a.idleLots = a.idleLots || [];
+    for (const lot of a.idleLots) lot.days -= 1;
+    for (const lot of a.idleLots) {
+      if (lot.days > 0) continue;
+      const canShip = Math.max(0, assemblyMonthlyCap() - (a.monthMade || 0));
+      if (canShip <= 0) break;
+      const qty = Math.min(lot.qty, canShip);
+      if (qty > 0) { lot.qty -= qty; completeShipment(qty); }
+    }
+    a.idleLots = a.idleLots.filter(l => l.qty > 0);
+    syncIdleLots();
+  }
+  function advanceAssembly() {
+    const a = state.assembly;
+    a.lastMade = 0; a.assy ??= 0; a.plc ??= 0; a.qc ??= 0;
+    syncIdleLots(); advanceIdleLots();
+    let rate = calcAssemblyRate();
+    if ((a.orderBacklog || 0) > 12) rate *= 1.45;
+    if ((a.orderBacklog || 0) >= 16) rate *= 1.25;
+    a.progress += rate;
+    const cap = Math.max(12, assemblyMonthlyCap() + 1, a.orderBacklog > 12 ? 16 : 12);
+    let moves = 0;
+    while (a.progress >= 1 && moves < 20) {
+      a.progress -= 1; moves += 1;
+      if ((a.qc || 0) > 0 && (a.idle || 0) < cap) {
+        a.qc -= 1;
+        if (Math.random() < calcDefectRate()) { a.rework += 1; a.assy += 1; state.pressure = clamp(state.pressure + 0.7, 0, 100); }
+        else pushIdleLot(1);
+      } else if ((a.plc || 0) > 0 && (a.qc || 0) < cap) {
+        a.plc -= 1; a.qc += 1;
+      } else if ((a.assy || 0) > 0 && (a.plc || 0) < cap) {
+        a.assy -= 1; a.plc += 1;
+      } else if ((a.frame || 0) > 0 && (a.assy || 0) < cap) {
+        a.frame -= 1; a.assy += 1;
+      } else if ((a.orderBacklog || 0) > 0 && (a.frame || 0) < cap) {
+        a.orderBacklog -= 1; a.frame += 1;
+      } else break;
+    }
+  }
+  function completeShipment(units = 1) {
+    const unitValue = Math.round(rand(55_000_000, 62_000_000));
+    const value = unitValue * units;
+    const cogs = equipmentCostFromSales(value);
+    const cashIn = Math.round(value * 0.20);
+    const arIn = value - cashIn;
+    state.cash += cashIn;
+    state.receivables += arIn;
+    state.payables += cogs;
+    state.financeFlow.monthlyIn += cashIn;
+    state.financeFlow.weeklyIn += cashIn;
+    state.financeFlow.sales += value;
+    state.financeFlow.cogs += cogs;
+    state.reputation = clamp(state.reputation + 0.8, 0, 100);
+    state.pressure = clamp(state.pressure - 0.8, 0, 100);
+    state.assembly.shipments += units;
+    state.assembly.monthMade += units;
+    state.assembly.lastMade += units;
+    flashBanner("출고", `완제품 ${units}대 / 매출 ${money(value)} / 현금 +${money(cashIn)} / 채권 +${money(arIn)}`);
+    addToast(`완제품 ${units}대 출고. 12대 기준 월 매출 약 ${money(12 * unitValue)}.`);
+  }
+  function moveOneToIdleNow() {
+    const a = state.assembly;
+    if ((a.qc || 0) > 0) { a.qc -= 1; pushIdleLot(1, 0); return true; }
+    if ((a.plc || 0) > 0) { a.plc -= 1; a.qc += 1; a.qc -= 1; pushIdleLot(1, 0); return true; }
+    if ((a.assy || 0) > 0) { a.assy -= 1; a.plc += 1; a.plc -= 1; a.qc += 1; a.qc -= 1; pushIdleLot(1, 0); return true; }
+    if ((a.frame || 0) > 0) { a.frame -= 1; a.assy += 1; a.assy -= 1; a.plc += 1; a.plc -= 1; a.qc += 1; a.qc -= 1; pushIdleLot(1, 0); return true; }
+    if ((a.orderBacklog || 0) > 0) { a.orderBacklog -= 1; a.frame += 1; return moveOneToIdleNow(); }
+    return false;
+  }
+  function forceMonthlyShipment(target = 12) {
+    const a = state.assembly;
+    syncIdleLots();
+    let guard = 0;
+    while ((a.monthMade || 0) < target && guard < 40) {
+      guard += 1;
+      syncIdleLots();
+      let shipped = false;
+      for (const lot of (a.idleLots || [])) {
+        if (lot.qty <= 0) continue;
+        lot.qty -= 1; completeShipment(1); shipped = true; break;
+      }
+      a.idleLots = (a.idleLots || []).filter(l => l.qty > 0);
+      syncIdleLots();
+      if (shipped) continue;
+      if (!moveOneToIdleNow()) break;
+    }
+    if ((a.monthMade || 0) < target) {
+      const lack = target - (a.monthMade || 0);
+      a.orderBacklog = (a.orderBacklog || 0) + lack;
+      state.pressure = clamp(state.pressure + lack * 2, 0, 100);
+      flashEvent("월말 출고 부족", `12대 목표 중 ${lack}대가 모자랐다. 다음 달 강제 잔업으로 넘어간다.`);
+    }
+  }
+
+  function applyBadLuck() {
+    const chance = clamp(0.035 + state.pressure / 1800 + (state.assembly.orderBacklog || 0) / 500, 0.035, 0.14);
+    if (Math.random() > chance) return false;
+    const year = dateForDay().getFullYear(); const month = dateForDay().getMonth() + 1;
+    const pool = badLuckDefs.filter(e => {
+      if (e.scheduled) return false;
+      if (e.yearly && state.flags[e.yearly] === year) return false;
+      if (e.semiAnnual && state.flags[e.semiAnnual] && state.day - state.flags[e.semiAnnual] < 180) return false;
+      if (e.monthly && state.flags[`${e.monthly}_${year}_${month}`]) return false;
+      return true;
+    });
+    if (!pool.length) return false;
+    const e = pool[Math.floor(Math.random() * pool.length)];
+    if (e.yearly) state.flags[e.yearly] = year;
+    if (e.semiAnnual) state.flags[e.semiAnnual] = state.day;
+    if (e.monthly) state.flags[`${e.monthly}_${year}_${month}`] = true;
+    const cost = Math.round(e.cost());
+    if (cost > 0) state.cash -= cost;
+    state.pressure = clamp(state.pressure + (e.pressure || 0), 0, 100);
+    state.morale = clamp(state.morale + (e.morale || 0), 0, 100);
+    state.reputation = clamp(state.reputation + (e.reputation || 0), 0, 100);
+    state.safety = clamp(state.safety + (e.safety || 0), 0, 100);
+    state.legalRisk = clamp(state.legalRisk + (e.legal || 0), 0, 55);
+    state.vendorTrust = clamp(state.vendorTrust + (e.vendor || 0), 0, 100);
+    state.payables += e.ap || 0;
+    if (e.pricePressure) state.flags.pricePressure = (state.flags.pricePressure || 0) + e.pricePressure;
+    if (e.orderLoss) state.assembly.orderBacklog = Math.max(0, (state.assembly.orderBacklog || 0) - e.orderLoss);
+    state.assembly.rework += e.rework || 0;
+    state.assembly.orderBacklog += e.backlog || 0;
+    if (e.overtime === 24) { state.flags.orderMishapHard = true; setOvertime(24, "철야"); }
+    else if (e.overtime === 21) { state.flags.orderMishap = true; setOvertime(21, "잔업"); }
+    state.financeFlow.weeklyOut += cost; state.financeFlow.monthlyOut += cost;
+    if (e.bucket === "snacks") { state.financeFlow.snacks += cost; state.financeFlow.weeklySnacks = (state.financeFlow.weeklySnacks || 0) + cost; }
+    else if (e.bucket === "vendors") { state.financeFlow.vendors = (state.financeFlow.vendors || 0) + cost; state.financeFlow.weeklyVendors = (state.financeFlow.weeklyVendors || 0) + cost; }
+    else { state.financeFlow.admin = (state.financeFlow.admin || 0) + cost; state.financeFlow.weeklyAdmin = (state.financeFlow.weeklyAdmin || 0) + cost; }
+    let eventMsg = e.msg;
+    if (e.trip && state.flags.lastTrip) eventMsg = `${e.msg} ${state.flags.lastTrip.country} 출장, 항공/숙박 ${money(cost)}.`;
+    if (e.orderLoss) eventMsg = `${e.msg} 수주 ${e.orderLoss}대 포기.`;
+    flashEvent(e.title, cost > 0 ? `${eventMsg} 손실 -${money(cost)}` : `${eventMsg} 신뢰도 하락`);
+    addToast(`${e.title}: ${eventMsg}`);
+    return true;
+  }
+  function maybeCrisis() {
+    if (state.day >= (state.flags.nextAccidentDay || 120)) return openAccidentModal();
+    const year = dateForDay().getFullYear();
+    if (state.day >= (state.flags.nextSnackDay || 75)) {
+      const e = badLuckDefs.find(x => x.scheduled === "snack");
+      if (e) {
+        state.flags.nextSnackDay = state.day + Math.floor(rand(60, 91));
+        const cost = Math.round(e.cost());
+        state.cash -= cost; state.financeFlow.snacks += cost; state.financeFlow.weeklySnacks += cost; state.financeFlow.weeklyOut += cost; state.financeFlow.monthlyOut += cost;
+        flashEvent(e.title, `${e.msg} 비용 -${money(cost)}`); addToast(`${e.title}: ${e.msg}`); return;
+      }
+    }
+    if (state.day > 90 && state.flags.chinaCopy !== year && Math.random() < 0.004) {
+      const e = badLuckDefs.find(x => x.yearly === "chinaCopy");
+      if (e) { state.flags.chinaCopy = year; state.flags.pricePressure = (state.flags.pricePressure || 0) + 1; state.assembly.orderBacklog = Math.max(0, (state.assembly.orderBacklog || 0) - 1); flashEvent(e.title, `${e.msg} 수주 1대 포기.`); addToast(`${e.title}: 수주 1대 포기.`); return; }
+    }
+    const legalRisk = Math.max(0, state.legalRisk - 42) * 0.0006;
+    const vendorRisk = Math.max(0, 42 - state.vendorTrust) * 0.0018;
+    const qualityRisk = Math.max(0, state.receivables / 1_000_000_000 - 3) * 0.0022 + Math.max(0, state.pressure - 74) * 0.0010 - deptLevel("design") * 0.0008;
+    if (Math.random() < legalRisk) return legalAudit();
+    if (Math.random() < vendorRisk) return vendorFreeze();
+    if (Math.random() < qualityRisk) return qualityRecall();
+    if (applyBadLuck()) return;
+  }
+  function qualityRecall() {
+    const cost = Math.round(rand(3_000_000, 9_800_000));
+    state.cash -= cost; state.receivables = Math.max(0, state.receivables - cost * 0.35);
+    state.reputation = clamp(state.reputation - 5, 0, 100); state.pressure = clamp(state.pressure + 3, 0, 100);
+    state.financeFlow.admin += cost; state.financeFlow.weeklyAdmin += cost; state.financeFlow.monthlyOut += cost; state.financeFlow.weeklyOut += cost;
+    flashEvent("품질 클레임", `고객사 대응 손실 -${money(cost)}`); addToast(`품질 클레임 비용 ${money(cost)}.`);
+  }
+
+  function inventoryValue() {
+    const a = state.assembly || {};
+    return Math.round(((a.frame||0) * 18_000_000) + ((a.assy||0) * 31_000_000) + ((a.plc||0) * 43_000_000) + ((a.qc||0) * 50_000_000) + ((a.idle||0) * 55_000_000));
+  }
+  function balanceSheet() {
+    const fixedAssets = 1_250_000_000;
+    const assets = Math.max(0, state.cash) + state.receivables + inventoryValue() + fixedAssets;
+    const liabilities = state.payables + state.debt;
+    return { assets, liabilities, equity: assets - liabilities };
+  }
+  function incomeStatement() {
+    const sales = state.financeFlow.sales || 0;
+    const cogs = state.financeFlow.cogs || 0;
+    const sga = (state.financeFlow.payroll || 0) + (state.financeFlow.admin || 0) + (state.financeFlow.snacks || 0);
+    const interest = state.financeFlow.interest || 0;
+    return { sales, cogs, grossProfit: sales - cogs, sga, interest, netProfit: sales - cogs - sga - interest };
+  }
+  function manufacturingCostStatement() {
+    return { materials: state.financeFlow.materials || 0, labor: Math.round((state.financeFlow.payroll || 0) * 0.52), outsource: state.financeFlow.outsource || 0, overhead: state.financeFlow.overhead || 0 };
+  }
+  function capitalImpairmentRate() {
+    const paidInCapital = 500_000_000;
+    const equity = balanceSheet().equity;
+    return Math.max(0, Math.round((paidInCapital - equity) / paidInCapital * 100));
+  }
+  function equityEstimate() { return balanceSheet().equity; }
+  function debtRatioEstimate() {
+    const bs = balanceSheet();
+    return bs.equity <= 0 ? 999 : Math.round(bs.liabilities / bs.equity * 100);
+  }
+  function openMonthlyReport(auto) {
+    state.paused = true;
+    const bs = balanceSheet(); const is = incomeStatement(); const mc = manufacturingCostStatement();
+    const out = is.cogs + is.sga + is.interest;
+    showModal(`<div class="modal-header"><h2>월간 보고</h2><p>월말에 대략 정리한 숫자입니다. 원가는 출고 때마다 보이지 않고 월말에 추정합니다.</p></div>
+      <div class="modal-body">
+        <div class="mini-table">
+          <div class="mini-cell"><label>월 매출</label><strong class="positive">+${money(is.sales)}</strong></div>
+          <div class="mini-cell"><label>월 지출</label><strong class="negative">-${money(out)}</strong></div>
+          <div class="mini-cell"><label>총 월 이익</label><strong class="${is.netProfit >= 0 ? "positive" : "negative"}">${signedMoney(is.netProfit)}</strong></div>
+          <div class="mini-cell"><label>자본잠식률</label><strong class="${capitalImpairmentRate() > 0 ? "negative" : "positive"}">${capitalImpairmentRate()}%</strong></div>
+        </div>
+        <div class="statement-grid">
+          <div class="statement-box"><h4>재무상태표</h4><p><span>자산</span><b>${money(bs.assets)}</b></p><p><span>부채</span><b>${money(bs.liabilities)}</b></p><p><span>자본</span><b>${money(bs.equity)}</b></p></div>
+          <div class="statement-box"><h4>손익계산서</h4><p><span>매출</span><b>${money(is.sales)}</b></p><p><span>추정원가(70~80%)</span><b>${money(is.cogs)}</b></p><p><span>순이익</span><b>${money(is.netProfit)}</b></p></div>
+          <div class="statement-box"><h4>제조원가명세서(추정)</h4><p><span>재료/AP</span><b>${money(mc.materials)}</b></p><p><span>노무</span><b>${money(mc.labor)}</b></p><p><span>외주/경비</span><b>${money(mc.outsource + mc.overhead)}</b></p></div>
+        </div>
+        <div class="mini-table">
+          <div class="mini-cell"><label>현금 수금</label><strong class="positive">+${money(state.financeFlow.monthlyIn)}</strong></div>
+          <div class="mini-cell"><label>채권</label><strong>${money(state.receivables)}</strong></div>
+          <div class="mini-cell"><label>미지급</label><strong>${money(state.payables)}</strong></div>
+          <div class="mini-cell"><label>월 출고</label><strong>${state.assembly.monthMade}대</strong></div>
+        </div>
+        <div class="modal-actions"><button id="monthlyContinueBtn">계속</button></div>
+      </div>`);
+    document.getElementById("monthlyContinueBtn").addEventListener("click", () => {
+      closeModal(); state.paused = false;
+      Object.assign(state.financeFlow, { weeklyIn:0, weeklyOut:0, monthlyIn:0, monthlyOut:0, payroll:0, outsource:0, materials:0, apPaid:0, interest:0, overhead:0, vendors:0, snacks:0, admin:0, weeklyVendors:0, weeklySnacks:0, weeklyAdmin:0, sales:0, cogs:0 });
+      state.assembly.monthMade = 0;
+    });
+  }
+  function renderAssemblyStage() {
+    const a = state.assembly; syncIdleLots();
+    const card = (name, count, cap=12, hot=false) => `<div class="flow-card ${hot ? "hot" : ""}"><b>${name}</b><strong>${count}/${Math.max(cap, count)}</strong><div class="flow-bar"><i style="width:${clamp(count / Math.max(cap, count, 1) * 100, 0, 100)}%"></i></div></div>`;
+    return `<div class="assembly-flow one-line">
+      ${card("수주잔량", a.orderBacklog || 0, 16, (a.orderBacklog || 0) > 12)}
+      ${card("프레임", a.frame || 0, 16, (a.frame || 0) > 12)}
+      ${card("아쎄이", a.assy || 0)}
+      ${card("PLC/전장", a.plc || 0)}
+      ${card("QC", a.qc || 0)}
+      ${card("Idle/출고", a.idle || 0, 12, (a.idle || 0) > 0)}
+    </div>`;
+  }
+  function openBankruptcyPrompt(reason) {
+    const bs = balanceSheet();
+    showModal(`<div class="modal-header"><h2>${escapeHtml(reason)}</h2><p>은행과 거래처에서 부실 연락이 오기 시작했습니다. 파산하시겠습니까?</p></div>
+      <div class="modal-body"><div class="mini-table">
+        <div class="mini-cell"><label>자본잠식률</label><strong>${capitalImpairmentRate()}%</strong></div>
+        <div class="mini-cell"><label>부채비율</label><strong>${debtRatioEstimate()}%</strong></div>
+        <div class="mini-cell"><label>자본</label><strong>${money(bs.equity)}</strong></div>
+        <div class="mini-cell"><label>현금</label><strong>${money(state.cash)}</strong></div>
+      </div><div class="modal-actions"><button id="declareBankruptcy">파산한다</button><button id="keepGoing">한 달 더 버틴다</button></div></div>`);
+    document.getElementById("declareBankruptcy").addEventListener("click", () => openEnding("파산 엔딩", "부실, 도산, 지급불능 통보를 받고 회사를 접었습니다."));
+    document.getElementById("keepGoing").addEventListener("click", () => { closeModal(); state.paused = false; state.pressure = clamp(state.pressure + 8, 0, 100); state.vendorTrust = clamp(state.vendorTrust - 4, 0, 100); renderDirty = true; });
   }
 
   function gameLoop(now) {
@@ -3192,6 +3808,171 @@
     urls.add("assets/char_dog.png");
     urls.add("assets/char_owl.png");
     urls.forEach(src => { const img = new Image(); img.src = src; });
+  }
+
+
+  /* v4.4.18: phone layout, per-day shipments, monthly estimated COGS */
+  const MANUFACTURING_COST_RATIO_BASE_V4417 = 0.75;
+  const MANUFACTURING_COST_RATIO_SPREAD_V4417 = 0.05;
+
+  function manufacturingCostRatio() {
+    return clamp(
+      MANUFACTURING_COST_RATIO_BASE_V4417 + rand(-MANUFACTURING_COST_RATIO_SPREAD_V4417, MANUFACTURING_COST_RATIO_SPREAD_V4417),
+      0.70,
+      0.80
+    );
+  }
+
+  function equipmentCostFromSales(value) {
+    return Math.round(value * manufacturingCostRatio());
+  }
+
+  function equipmentRevenueForUnits(units = 1) {
+    let total = 0;
+    const count = Math.max(0, Math.round(units || 0));
+    for (let i = 0; i < count; i += 1) total += equipmentUnitPrice();
+    return total;
+  }
+
+  function randomIdleDays() {
+    return Math.random() < 0.7 ? Math.floor(rand(3, 16)) : Math.floor(rand(16, 31));
+  }
+
+  function seedIdleLots(qty = 0) {
+    const count = Math.max(0, Math.round(qty || 0));
+    return Array.from({ length: count }, (_, i) => ({ qty: 1, days: Math.min(30, 2 + i * 2) }));
+  }
+
+  function syncIdleLots() {
+    const a = state.assembly || {};
+    const source = Array.isArray(a.idleLots) ? a.idleLots : [];
+    const normalized = [];
+    for (const lot of source) {
+      const qty = Math.max(0, Math.round(lot.qty || 0));
+      const baseDays = Number.isFinite(Number(lot.days)) ? Math.round(Number(lot.days)) : randomIdleDays();
+      for (let i = 0; i < qty; i += 1) normalized.push({ qty: 1, days: baseDays });
+    }
+    if (!normalized.length && (a.idle || 0) > 0) normalized.push(...seedIdleLots(a.idle));
+    a.idleLots = normalized.filter(l => l.qty > 0);
+    a.idle = a.idleLots.length;
+  }
+
+  function pushIdleLot(qty = 1, days = null) {
+    const a = state.assembly;
+    a.idleLots = a.idleLots || [];
+    const count = Math.max(0, Math.round(qty || 0));
+    for (let i = 0; i < count; i += 1) a.idleLots.push({ qty: 1, days: days == null ? randomIdleDays() : Math.max(0, Math.round(days)) });
+    syncIdleLots();
+  }
+
+  function dailyShipmentLimit() {
+    const dayInMonth = ((state.day - 1) % 30) + 1;
+    if (dayInMonth >= 25 && (state.assembly.monthMade || 0) < 12) return 6;
+    if ((state.assembly.rushDays || 0) > 0 || state.workShift?.end >= 24 * 60) return 6;
+    if (state.workShift?.end >= 21 * 60 || state.pressure > 70) return 2;
+    return Math.random() < 0.25 ? 2 : 1;
+  }
+
+  function advanceIdleLots() {
+    const a = state.assembly;
+    syncIdleLots();
+    for (const lot of a.idleLots) lot.days -= 1;
+    const dayInMonth = ((state.day - 1) % 30) + 1;
+    if (dayInMonth >= 25 && (a.monthMade || 0) < 12) {
+      for (const lot of a.idleLots) lot.days = Math.min(lot.days, 0);
+    }
+    let shipLimit = Math.min(dailyShipmentLimit(), Math.max(0, assemblyMonthlyCap() - (a.monthMade || 0)));
+    let shipped = 0;
+    a.idleLots.sort((x, y) => x.days - y.days);
+    for (const lot of a.idleLots) {
+      if (shipLimit <= 0) break;
+      if (lot.days > 0) continue;
+      lot.qty -= 1;
+      shipped += 1;
+      shipLimit -= 1;
+    }
+    a.idleLots = a.idleLots.filter(l => l.qty > 0);
+    syncIdleLots();
+    if (shipped > 0) completeShipment(shipped);
+  }
+
+  function completeShipment(units = 1) {
+    units = Math.max(0, Math.round(units || 0));
+    if (!units) return;
+    const value = equipmentRevenueForUnits(units);
+    const cogs = equipmentCostFromSales(value);
+    const cashIn = Math.round(value * 0.20);
+    const arIn = value - cashIn;
+    const avg = Math.round(value / units);
+    state.cash += cashIn;
+    state.receivables += arIn;
+    state.payables += cogs;
+    state.financeFlow.monthlyIn += cashIn;
+    state.financeFlow.weeklyIn += cashIn;
+    state.financeFlow.sales += value;
+    state.financeFlow.cogs += cogs;
+    state.reputation = clamp(state.reputation + units * 0.55, 0, 100);
+    state.pressure = clamp(state.pressure - units * 0.35, 0, 100);
+    state.assembly.shipments += units;
+    state.assembly.monthMade += units;
+    state.assembly.lastMade += units;
+    flashBanner("출고", `완제품 ${units}대 / 매출 ${money(value)} / 평균단가 ${money(avg)}`);
+    addToast(`완제품 ${units}대 출고. 매출 ${money(value)}. 원가는 월말에 대략 잡는다.`);
+  }
+
+  function forceMonthlyShipment(target = 12) {
+    const a = state.assembly;
+    syncIdleLots();
+    const lack = Math.max(0, target - (a.monthMade || 0));
+    if (lack <= 0) return;
+    for (const lot of a.idleLots) lot.days = Math.min(lot.days, 0);
+    advanceIdleLots();
+    if ((a.monthMade || 0) < target) {
+      const remain = target - (a.monthMade || 0);
+      a.orderBacklog = (a.orderBacklog || 0) + remain;
+      state.pressure = clamp(state.pressure + remain * 2, 0, 100);
+      flashEvent("월말 출고 부족", `12대 목표 중 ${remain}대가 남았다. 다음 달 강제 잔업으로 넘어간다.`);
+    }
+  }
+
+  function advanceAssembly() {
+    const a = state.assembly;
+    normalizeOrderBalance(state);
+    a.lastMade = 0; a.assy ??= 0; a.plc ??= 0; a.qc ??= 0;
+    syncIdleLots();
+    advanceIdleLots();
+    let rate = calcAssemblyRate();
+    if ((a.orderBacklog || 0) > 12) rate *= 1.45;
+    if ((a.orderBacklog || 0) >= 16) rate *= 1.25;
+    a.progress += rate;
+    const cap = Math.max(12, assemblyMonthlyCap() + 1, (a.orderBacklog || 0) > 12 ? 16 : 12);
+    let moves = 0;
+    while (a.progress >= 1 && moves < 20) {
+      a.progress -= 1; moves += 1;
+      if ((a.qc || 0) > 0 && (a.idle || 0) < cap) {
+        a.qc -= 1;
+        if (Math.random() < calcDefectRate()) { a.rework += 1; a.assy += 1; state.pressure = clamp(state.pressure + 0.7, 0, 100); }
+        else pushIdleLot(1);
+      } else if ((a.plc || 0) > 0 && (a.qc || 0) < cap) {
+        a.plc -= 1; a.qc += 1;
+      } else if ((a.assy || 0) > 0 && (a.plc || 0) < cap) {
+        a.assy -= 1; a.plc += 1;
+      } else if ((a.frame || 0) > 0 && (a.assy || 0) < cap) {
+        a.frame -= 1; a.assy += 1;
+      } else if ((a.orderBacklog || 0) > 0 && (a.frame || 0) < cap) {
+        a.orderBacklog -= 1; a.frame += 1;
+      } else break;
+    }
+  }
+
+  function inventoryValue() {
+    const a = state.assembly || {};
+    return Math.round(((a.frame||0) * 12_000_000) + ((a.assy||0) * 22_000_000) + ((a.plc||0) * 32_000_000) + ((a.qc||0) * 40_000_000) + ((a.idle||0) * 45_000_000));
+  }
+
+  function manufacturingCostStatement() {
+    const cogs = state.financeFlow.cogs || 0;
+    return { materials: Math.round(cogs * 0.52), labor: Math.round(cogs * 0.18), outsource: Math.round(cogs * 0.20), overhead: Math.round(cogs * 0.10) };
   }
 
   function init() {
